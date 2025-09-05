@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../HomeHub.Domain/HomeHub.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
