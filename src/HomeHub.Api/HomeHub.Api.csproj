@@ -5,10 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../HomeHub.Application/HomeHub.Application.csproj"/>
+    <ProjectReference Include="../HomeHub.Application/HomeHub.Application.csproj" />
+    <ProjectReference Include="../HomeHub.Infrastructure/HomeHub.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
