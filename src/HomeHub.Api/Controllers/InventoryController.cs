@@ -1,19 +1,22 @@
-using HomeHub.Application.Features.Inventory.Interfaces;
+using HomeHub.Application.Features.Inventory.CreateInventory;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeHub.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InventoryController : ControllerBase
+public class InventoryController(IMediator mediator) : ControllerBase
 {
-    private readonly IInventoryService _inventoryService;
 
-    public InventoryController(IInventoryService inventoryService)
+    [HttpGet("{id}")]
+    public IActionResult GetById(Guid id) => Ok($"{id}");
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateInventoryItemCommand command)
     {
-        _inventoryService = inventoryService;
-    }
+        var id = await mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { id }, id);
 
-    [HttpGet]
-    public IActionResult GetAll() => Ok(_inventoryService.GetAll());
+    }
 }
