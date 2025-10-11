@@ -1,4 +1,7 @@
+using System.Threading.Tasks;
 using HomeHub.Application.Features.Inventory.CreateInventory;
+using HomeHub.Application.Features.Inventory.GetAll;
+using HomeHub.Application.Features.Inventory.GetInventoryItemById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +13,18 @@ public class InventoryController(IMediator mediator) : ControllerBase
 {
 
     [HttpGet("{id}")]
-    public IActionResult GetById(Guid id) => Ok($"{id}");
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        var result = await mediator.Send(new GetInventoryItemByIdQuery(id));
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetAllInventoryItemsQuery query)
+    {
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateInventoryItemCommand command)

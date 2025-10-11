@@ -3,5 +3,5 @@ using HomeHub.Domain.Entities;
 
 namespace HomeHub.Application.Features.Inventory.Interfaces;
 
-public interface IInventoryRepository : IRepositoryBase<InventoryItem>
+public interface IInventoryItemRepository : IRepositoryBase<InventoryItem>
 { }

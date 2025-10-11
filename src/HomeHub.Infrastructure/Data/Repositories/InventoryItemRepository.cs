@@ -5,6 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeHub.Infrastructure.Data.Repositories;
 
-public class InventoryItemRepository(HomeHubContext context) : RepositoryBase<InventoryItem>(context), IInventoryRepository
+public class InventoryItemRepository(HomeHubContext context) : RepositoryBase<InventoryItem>(context), IInventoryItemRepository
 {
 }

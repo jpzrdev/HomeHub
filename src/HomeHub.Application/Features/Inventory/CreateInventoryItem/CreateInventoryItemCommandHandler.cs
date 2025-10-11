@@ -5,7 +5,7 @@ using MediatR;
 namespace HomeHub.Application.Features.Inventory.CreateInventory;
 
 public class CreateInventoryItemCommandHandler(
-    IInventoryRepository inventoryRepository
+    IInventoryItemRepository InventoryItemRepository
 ) : IRequestHandler<CreateInventoryItemCommand, Guid>
 {
     public async Task<Guid> Handle(CreateInventoryItemCommand request, CancellationToken cancellationToken)
@@ -17,7 +17,7 @@ public class CreateInventoryItemCommandHandler(
             request.NotifyOnBelowMinimumQuantity
         );
 
-        await inventoryRepository.AddAsync(inventory);
+        await InventoryItemRepository.AddAsync(inventory);
 
         return inventory.Id;
     }
