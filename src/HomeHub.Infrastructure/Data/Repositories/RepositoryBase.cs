@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using HomeHub.Infrastructure.Data;
 using HomeHub.Application.Interfaces;
+using HomeHub.Application.Common.Pagination;
 
 namespace HomeHub.Infrastructure.Repositories;
 
@@ -47,5 +48,27 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         _dbSet.Remove(entity);
         _context.SaveChanges();
+    }
+
+    public async Task<PaginationResult<T>> GetPaginatedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null)
+    {
+        IQueryable<T> query = _dbSet.AsNoTracking();
+
+        if (include != null)
+            query = include(query);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        var totalItems = await query.CountAsync();
+
+        if (orderBy != null)
+            query = orderBy(query);
+
+        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        var items = await query.ToListAsync();
+
+        return new PaginationResult<T>(items, totalItems, pageNumber, pageSize);
     }
 }
