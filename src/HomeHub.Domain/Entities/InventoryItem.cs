@@ -16,4 +16,12 @@ public class InventoryItem : BaseEntity
         MinimumQuantity = minimumQuantity;
         NotifyOnBelowMinimumQuantity = notifyOnBelowMinimumQuantity;
     }
+
+    public void Update(string? name, decimal? quantityAvailable, decimal? minimumQuantity, bool? notifyOnBelowMinimumQuantity)
+    {
+        Name = name ?? Name;
+        QuantityAvailable = quantityAvailable ?? QuantityAvailable;
+        MinimumQuantity = minimumQuantity ?? MinimumQuantity;
+        NotifyOnBelowMinimumQuantity = notifyOnBelowMinimumQuantity ?? NotifyOnBelowMinimumQuantity;
+    }
 }

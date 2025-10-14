@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HomeHub.Application.Features.Inventory.GetInventoryItemById;
 
-public class GetInventoryItemByIdQueryHandler(IInventoryRepository repository) : IRequestHandler<GetInventoryItemByIdQuery, InventoryItem>
+public class GetInventoryItemByIdQueryHandler(IInventoryItemRepository repository) : IRequestHandler<GetInventoryItemByIdQuery, InventoryItem>
 {
     public async Task<InventoryItem> Handle(GetInventoryItemByIdQuery request, CancellationToken cancellationToken)
     {

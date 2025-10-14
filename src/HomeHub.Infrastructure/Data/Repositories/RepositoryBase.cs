@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using HomeHub.Infrastructure.Data;
 using HomeHub.Application.Interfaces;
 using HomeHub.Application.Common.Pagination;
+using HomeHub.Domain.Common;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HomeHub.Infrastructure.Repositories;
 
@@ -17,40 +19,42 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
     {
-        return await _dbSet.Where(predicate).ToListAsync();
+        return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
     }
 
-    public async Task AddAsync(T entity)
+    public async Task AddAsync(T entity, CancellationToken cancellationToken)
     {
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public void Update(T entity)
+    public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
     {
         _dbSet.Update(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public void Remove(T entity)
+    public async Task RemoveAsync(T entity, CancellationToken cancellationToken)
     {
         _dbSet.Remove(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<PaginationResult<T>> GetPaginatedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null)
+
+
+    public async Task<PaginationResult<T>> GetPaginatedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null)
     {
         IQueryable<T> query = _dbSet.AsNoTracking();
 
