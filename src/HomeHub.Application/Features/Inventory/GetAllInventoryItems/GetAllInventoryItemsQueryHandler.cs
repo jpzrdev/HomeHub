@@ -10,7 +10,7 @@ public class GetAllInventoryItemsQueryHandler(IInventoryItemRepository repositor
 {
     public async Task<PaginationResult<InventoryItem>> Handle(GetAllInventoryItemsQuery request, CancellationToken cancellationToken)
     {
-        var paginatedResult = await repository.GetPaginatedAsync(request.PageNumber, request.PageSize);
+        var paginatedResult = await repository.GetPaginatedAsync(request.PageNumber, request.PageSize, cancellationToken);
 
         return paginatedResult;
     }
