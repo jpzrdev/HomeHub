@@ -17,7 +17,7 @@ public class CreateInventoryItemCommandHandler(
             request.NotifyOnBelowMinimumQuantity
         );
 
-        await InventoryItemRepository.AddAsync(inventory);
+        await InventoryItemRepository.AddAsync(inventory, cancellationToken);
 
         return inventory.Id;
     }
