@@ -4,7 +4,8 @@ using MediatR;
 
 namespace HomeHub.Application.Features.Inventory.UpdateInventoryItem;
 
-public class UpdateInventoryItemCommandHandler(IInventoryItemRepository repository) : IRequestHandler<UpdateInventoryItemCommand, InventoryItem>
+public class UpdateInventoryItemCommandHandler(IInventoryItemRepository repository)
+    : IRequestHandler<UpdateInventoryItemCommand, InventoryItem>
 {
     public async Task<InventoryItem> Handle(UpdateInventoryItemCommand request, CancellationToken cancellationToken)
     {
@@ -12,10 +13,14 @@ public class UpdateInventoryItemCommandHandler(IInventoryItemRepository reposito
 
         if (inventoryItem is null)
         {
-            return null;
+            throw new KeyNotFoundException($"Inventory item with ID {request.Id} was not found.");
         }
 
-        inventoryItem.Update(request.Name, request.QuantityAvailable, request.MinimumQuantity, request.NotifyOnBelowMinimumQuantity);
+        inventoryItem.Update(
+            request.Name,
+            request.QuantityAvailable,
+            request.MinimumQuantity,
+            request.NotifyOnBelowMinimumQuantity);
 
         await repository.UpdateAsync(inventoryItem, cancellationToken);
 
