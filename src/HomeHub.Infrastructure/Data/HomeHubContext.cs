@@ -10,6 +10,8 @@ public class HomeHubContext : DbContext
             : base(options) { }
 
     public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
+    public DbSet<ShoppingList> ShoppingLists => Set<ShoppingList>();
+    public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

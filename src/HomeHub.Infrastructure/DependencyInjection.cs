@@ -1,4 +1,5 @@
 using HomeHub.Application.Features.Inventory.Interfaces;
+using HomeHub.Application.Features.ShoppingList.Interfaces;
 using HomeHub.Infrastructure.Data;
 using HomeHub.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ public static class DependencyInjection
                 configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
+        services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
 
         return services;
     }
