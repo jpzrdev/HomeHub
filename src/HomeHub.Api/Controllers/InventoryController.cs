@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using HomeHub.Application.Features.Inventory.CreateInventory;
+using HomeHub.Application.Features.Inventory.DeleteInventoryItem;
 using HomeHub.Application.Features.Inventory.GetAll;
 using HomeHub.Application.Features.Inventory.GetInventoryItemById;
 using MediatR;
@@ -32,5 +33,12 @@ public class InventoryController(IMediator mediator) : ControllerBase
         var id = await mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { id }, id);
 
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    {
+        await mediator.Send(new DeleteInventoryItemCommand(id));
+        return NoContent();
     }
 }
