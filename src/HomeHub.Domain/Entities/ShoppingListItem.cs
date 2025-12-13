@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using HomeHub.Domain.Common;
 
 namespace HomeHub.Domain.Entities;
@@ -5,8 +6,13 @@ namespace HomeHub.Domain.Entities;
 public class ShoppingListItem : BaseEntity
 {
     public Guid ShoppingListId { get; internal set; }
+
+    [JsonIgnore]
     public ShoppingList ShoppingList { get; private set; } = null!;
+
     public Guid InventoryItemId { get; private set; }
+
+    [JsonIgnore]
     public InventoryItem InventoryItem { get; private set; } = null!;
     public decimal QuantityToBuy { get; private set; }
     public bool IsPurchased { get; private set; }
