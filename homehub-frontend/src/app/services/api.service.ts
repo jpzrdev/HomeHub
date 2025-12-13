@@ -49,6 +49,13 @@ export interface CreateInventoryItemRequest {
   notifyOnBelowMinimumQuantity: boolean;
 }
 
+export interface UpdateInventoryItemRequest {
+  name?: string;
+  quantityAvailable?: number;
+  minimumQuantity?: number;
+  notifyOnBelowMinimumQuantity?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,6 +78,10 @@ export class ApiService {
 
   createInventoryItem(item: CreateInventoryItemRequest): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/Inventory`, item);
+  }
+
+  updateInventoryItem(id: string, item: UpdateInventoryItemRequest): Observable<InventoryItem> {
+    return this.http.put<InventoryItem>(`${this.apiUrl}/Inventory/${id}`, item);
   }
 
   deleteInventoryItem(id: string): Observable<void> {

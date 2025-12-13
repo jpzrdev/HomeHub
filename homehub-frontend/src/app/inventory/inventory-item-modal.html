@@ -1,0 +1,62 @@
+@if (isOpen) {
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit Inventory Item' : 'Add New Inventory Item' }}</h2>
+      <button class="close-button" (click)="onClose()" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form (ngSubmit)="onSave()" #form="ngForm">
+        <div class="form-group">
+          <label for="name">Name <span class="required">*</span></label>
+          <input type="text" id="name" name="name" [(ngModel)]="formData.name" class="form-input"
+            [class.error]="errors['name']" placeholder="Enter item name" required>
+          @if (errors['name']) {
+          <span class="error-message">{{ errors['name'] }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="quantityAvailable">Quantity Available</label>
+          <input type="number" id="quantityAvailable" name="quantityAvailable" [(ngModel)]="formData.quantityAvailable"
+            class="form-input" [class.error]="errors['quantityAvailable']" placeholder="0" min="0" step="0.01">
+          @if (errors['quantityAvailable']) {
+          <span class="error-message">{{ errors['quantityAvailable'] }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="minimumQuantity">Minimum Quantity</label>
+          <input type="number" id="minimumQuantity" name="minimumQuantity" [(ngModel)]="formData.minimumQuantity"
+            class="form-input" [class.error]="errors['minimumQuantity']" placeholder="0" min="0" step="0.01">
+          @if (errors['minimumQuantity']) {
+          <span class="error-message">{{ errors['minimumQuantity'] }}</span>
+          }
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="notifyOnBelowMinimumQuantity" name="notifyOnBelowMinimumQuantity"
+              [(ngModel)]="formData.notifyOnBelowMinimumQuantity" class="checkbox-input">
+            <span>Notify when quantity falls below minimum</span>
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="button button-secondary" (click)="onClose()">Cancel</button>
+      <button type="button" class="button button-primary" (click)="onSave()">
+        {{ isEditMode ? 'Update' : 'Add' }} Item
+      </button>
+    </div>
+  </div>
+</div>
+}

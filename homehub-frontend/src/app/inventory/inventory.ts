@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService, InventoryItem as ApiInventoryItem } from '../services/api.service';
+import { InventoryItemModal, InventoryItemFormData } from './inventory-item-modal';
 
 export interface InventoryItem {
   id: string;
@@ -15,7 +16,7 @@ export interface InventoryItem {
 
 @Component({
   selector: 'app-inventory',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, InventoryItemModal],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css',
 })
@@ -26,6 +27,8 @@ export class Inventory implements OnInit {
   inventoryItems: InventoryItem[] = [];
   isLoading = false;
   error: string | null = null;
+  isModalOpen = false;
+  selectedItem: InventoryItem | null = null;
 
   ngOnInit(): void {
     this.loadInventoryItems();
@@ -101,6 +104,67 @@ export class Inventory implements OnInit {
         console.error('Error deleting inventory item:', err);
       }
     });
+  }
+
+  openAddModal(): void {
+    this.selectedItem = null;
+    this.isModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  openEditModal(item: InventoryItem): void {
+    console.log('Opening edit modal for item:', item);
+    // Close modal first if it's open, then set item and open
+    if (this.isModalOpen) {
+      this.isModalOpen = false;
+      this.selectedItem = null;
+      this.cdr.detectChanges();
+    }
+
+    // Set item and open modal
+    this.selectedItem = { ...item };
+    this.isModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedItem = null;
+  }
+
+  saveItem(formData: InventoryItemFormData): void {
+    if (this.selectedItem) {
+      // Update existing item
+      console.log('Updating item:', this.selectedItem.id, formData);
+      this.apiService.updateInventoryItem(this.selectedItem.id, formData).subscribe({
+        next: (updatedItem) => {
+          console.log('Update successful:', updatedItem);
+          const index = this.inventoryItems.findIndex(item => item.id === this.selectedItem!.id);
+          if (index !== -1) {
+            this.inventoryItems[index] = this.mapApiItemToComponentItem(updatedItem);
+          }
+          this.closeModal();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.error = 'Failed to update item. Please try again.';
+          console.error('Error updating inventory item:', err);
+          console.error('Error details:', JSON.stringify(err, null, 2));
+        }
+      });
+    } else {
+      // Create new item
+      this.apiService.createInventoryItem(formData).subscribe({
+        next: () => {
+          this.loadInventoryItems();
+          this.closeModal();
+        },
+        error: (err) => {
+          this.error = 'Failed to create item. Please try again.';
+          console.error('Error creating inventory item:', err);
+        }
+      });
+    }
   }
 
 }

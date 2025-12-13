@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using HomeHub.Api.DTOs;
 using HomeHub.Application.Features.Inventory.CreateInventory;
 using HomeHub.Application.Features.Inventory.DeleteInventoryItem;
 using HomeHub.Application.Features.Inventory.GetAll;
 using HomeHub.Application.Features.Inventory.GetInventoryItemById;
+using HomeHub.Application.Features.Inventory.UpdateInventoryItem;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +34,20 @@ public class InventoryController(IMediator mediator) : ControllerBase
     {
         var id = await mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { id }, id);
+    }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateInventoryItemRequest request)
+    {
+        var command = new UpdateInventoryItemCommand(
+            id,
+            request.Name,
+            request.QuantityAvailable,
+            request.MinimumQuantity,
+            request.NotifyOnBelowMinimumQuantity);
+
+        var result = await mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
