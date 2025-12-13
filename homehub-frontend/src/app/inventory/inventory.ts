@@ -37,23 +37,22 @@ export class Inventory implements OnInit {
 
     this.apiService.getInventoryItems(1, 100).subscribe({
       next: (response) => {
-        console.log('Inventory items API response:', response);
-        console.log('Response items array:', response.items);
-        console.log('Response items length:', response.items?.length);
-        console.log('isLoading before mapping:', this.isLoading);
+        console.log('API Response:', response);
+        console.log('Response items:', response.items);
+        console.log('Is array?', Array.isArray(response.items));
 
         if (response.items && Array.isArray(response.items)) {
           this.inventoryItems = response.items.map(item => this.mapApiItemToComponentItem(item));
-          console.log('Mapped inventory items:', this.inventoryItems);
-          console.log('Final inventoryItems length:', this.inventoryItems.length);
+          console.log('Mapped items:', this.inventoryItems);
+          console.log('Items count:', this.inventoryItems.length);
         } else {
-          console.warn('Response items is not an array:', response.items);
+          console.warn('Response items is not valid:', response.items);
           this.inventoryItems = [];
         }
 
         this.isLoading = false;
-        console.log('isLoading after mapping:', this.isLoading);
-        console.log('Final inventoryItems array:', this.inventoryItems);
+        console.log('isLoading set to:', this.isLoading);
+        console.log('Final inventoryItems:', this.inventoryItems);
         this.cdr.detectChanges();
       },
       error: (err) => {
