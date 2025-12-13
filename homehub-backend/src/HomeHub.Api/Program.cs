@@ -8,6 +8,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.WriteIndented = true;
     });
