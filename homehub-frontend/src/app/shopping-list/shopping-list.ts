@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService, ShoppingList as ApiShoppingList, ShoppingListItem as ApiShoppingListItem } from '../services/api.service';
+import { ToastService } from '../services/toast.service';
 
 export interface ShoppingListItem {
   id: string;
@@ -28,10 +29,10 @@ export interface ShoppingListData {
 export class ShoppingList implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly toastService = inject(ToastService);
 
   shoppingLists: ShoppingListData[] = [];
   isLoading = false;
-  error: string | null = null;
 
   ngOnInit(): void {
     this.loadShoppingLists();
@@ -39,7 +40,6 @@ export class ShoppingList implements OnInit {
 
   loadShoppingLists(): void {
     this.isLoading = true;
-    this.error = null;
 
     this.apiService.getShoppingLists(1, 100).subscribe({
       next: (response) => {
@@ -62,7 +62,7 @@ export class ShoppingList implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = 'Failed to load shopping lists. Please try again later.';
+        this.toastService.error('An error occurred while loading shopping lists. Please try again later.');
         this.isLoading = false;
         console.error('Error loading shopping lists:', err);
       }
@@ -109,7 +109,6 @@ export class ShoppingList implements OnInit {
 
   generateNewShoppingList(): void {
     this.isLoading = true;
-    this.error = null;
 
     this.apiService.generateShoppingList().subscribe({
       next: () => {
@@ -117,7 +116,7 @@ export class ShoppingList implements OnInit {
         this.loadShoppingLists();
       },
       error: (err) => {
-        this.error = 'Failed to generate shopping list. Please try again.';
+        this.toastService.error('Failed to generate shopping list. Please try again.');
         this.isLoading = false;
         console.error('Error generating shopping list:', err);
       }

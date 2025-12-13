@@ -27,11 +27,6 @@
     <div class="loading-state">
       <p>Loading shopping lists...</p>
     </div>
-    } @else if (error) {
-    <div class="error-state">
-      <p>{{ error }}</p>
-      <button class="retry-button" (click)="loadShoppingLists()">Retry</button>
-    </div>
     } @else if (shoppingLists.length === 0) {
     <div class="empty-state">
       <div class="empty-state-content">

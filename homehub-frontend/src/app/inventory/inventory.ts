@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService, InventoryItem as ApiInventoryItem } from '../services/api.service';
 import { InventoryItemModal, InventoryItemFormData } from './inventory-item-modal';
+import { ToastService } from '../services/toast.service';
 
 export interface InventoryItem {
   id: string;
@@ -23,10 +24,10 @@ export interface InventoryItem {
 export class Inventory implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly toastService = inject(ToastService);
 
   inventoryItems: InventoryItem[] = [];
   isLoading = false;
-  error: string | null = null;
   isModalOpen = false;
   selectedItem: InventoryItem | null = null;
 
@@ -36,7 +37,6 @@ export class Inventory implements OnInit {
 
   loadInventoryItems(): void {
     this.isLoading = true;
-    this.error = null;
 
     this.apiService.getInventoryItems(1, 100).subscribe({
       next: (response) => {
@@ -59,7 +59,7 @@ export class Inventory implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = 'Failed to load inventory items. Please try again later.';
+        this.toastService.error('An error occurred while loading inventory items. Please try again later.');
         this.isLoading = false;
         console.error('Error loading inventory items:', err);
       }
@@ -100,7 +100,7 @@ export class Inventory implements OnInit {
         this.inventoryItems = this.inventoryItems.filter(item => item.id !== id);
       },
       error: (err) => {
-        this.error = 'Failed to delete item. Please try again.';
+        this.toastService.error('Failed to delete item. Please try again.');
         console.error('Error deleting inventory item:', err);
       }
     });
@@ -147,7 +147,7 @@ export class Inventory implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.error = 'Failed to update item. Please try again.';
+          this.toastService.error('Failed to update item. Please try again.');
           console.error('Error updating inventory item:', err);
           console.error('Error details:', JSON.stringify(err, null, 2));
         }
@@ -160,7 +160,7 @@ export class Inventory implements OnInit {
           this.closeModal();
         },
         error: (err) => {
-          this.error = 'Failed to create item. Please try again.';
+          this.toastService.error('Failed to create item. Please try again.');
           console.error('Error creating inventory item:', err);
         }
       });

@@ -40,13 +40,6 @@
             <p>Loading inventory items...</p>
           </td>
         </tr>
-        } @else if (error) {
-        <tr>
-          <td colspan="6" class="error-state">
-            <p>{{ error }}</p>
-            <button class="retry-button" (click)="loadInventoryItems()">Retry</button>
-          </td>
-        </tr>
         } @else if (inventoryItems.length === 0) {
         <tr>
           <td colspan="6" class="empty-state">
