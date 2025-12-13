@@ -11,7 +11,10 @@ public class GetAllShoppingListsQueryHandler(IShoppingListRepository repository)
 {
     public async Task<PaginationResult<Domain.Entities.ShoppingList>> Handle(GetAllShoppingListsQuery request, CancellationToken cancellationToken)
     {
-        var paginatedResult = await repository.GetPaginatedAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var paginatedResult = await repository.GetPaginatedWithItemsAsync(
+            request.PageNumber,
+            request.PageSize,
+            cancellationToken);
 
         return paginatedResult;
     }

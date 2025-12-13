@@ -24,6 +24,21 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         return await _dbSet.FindAsync(id, cancellationToken);
     }
 
+    public async Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IQueryable<T>>? include, CancellationToken cancellationToken)
+    {
+        if (include == null)
+        {
+            return await GetByIdAsync(id, cancellationToken);
+        }
+
+        IQueryable<T> query = _dbSet;
+
+        query = include(query);
+
+        // Use EF.Property to access the Id property when T doesn't have a direct constraint
+        return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id, cancellationToken);
+    }
+
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _dbSet.ToListAsync(cancellationToken);

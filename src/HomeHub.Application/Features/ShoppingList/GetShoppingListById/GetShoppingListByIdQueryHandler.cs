@@ -10,7 +10,7 @@ public class GetShoppingListByIdQueryHandler(IShoppingListRepository repository)
 {
     public async Task<Domain.Entities.ShoppingList> Handle(GetShoppingListByIdQuery request, CancellationToken cancellationToken)
     {
-        var shoppingList = await repository.GetByIdAsync(request.Id, cancellationToken);
+        var shoppingList = await repository.GetByIdWithItemsAsync(request.Id, cancellationToken);
 
         if (shoppingList is null)
         {

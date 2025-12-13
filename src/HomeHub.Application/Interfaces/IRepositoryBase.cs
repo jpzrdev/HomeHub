@@ -6,6 +6,7 @@ namespace HomeHub.Application.Interfaces;
 public interface IRepositoryBase<T> where T : class
 {
     Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<T?> GetByIdAsync(Guid id, Func<IQueryable<T>, IQueryable<T>>? include, CancellationToken cancellationToken);
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken);
     Task<PaginationResult<T>> GetPaginatedAsync(
         int pageNumber,
