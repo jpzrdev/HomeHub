@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService, ShoppingList as ApiShoppingList, ShoppingListItem as ApiShoppingListItem } from '../services/api.service';
@@ -27,6 +27,7 @@ export interface ShoppingListData {
 })
 export class ShoppingList implements OnInit {
   private readonly apiService = inject(ApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   shoppingLists: ShoppingListData[] = [];
   isLoading = false;
@@ -40,13 +41,25 @@ export class ShoppingList implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    console.log('Loading shopping lists from API...');
     this.apiService.getShoppingLists(1, 100).subscribe({
       next: (response) => {
-        console.log('Shopping lists API response:', response);
-        this.shoppingLists = response.items.map((list) => this.mapApiShoppingListToComponentShoppingList(list));
-        console.log('Mapped shopping lists:', this.shoppingLists);
+        console.log('API Response:', response);
+        console.log('Response items:', response.items);
+        console.log('Is array?', Array.isArray(response.items));
+
+        if (response.items && Array.isArray(response.items)) {
+          this.shoppingLists = response.items.map((list) => this.mapApiShoppingListToComponentShoppingList(list));
+          console.log('Mapped shopping lists:', this.shoppingLists);
+          console.log('Lists count:', this.shoppingLists.length);
+        } else {
+          console.warn('Response items is not valid:', response.items);
+          this.shoppingLists = [];
+        }
+
         this.isLoading = false;
+        console.log('isLoading set to:', this.isLoading);
+        console.log('Final shoppingLists:', this.shoppingLists);
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.error = 'Failed to load shopping lists. Please try again later.';
