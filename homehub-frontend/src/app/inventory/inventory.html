@@ -1,0 +1,87 @@
+<div class="inventory-container">
+  <header class="inventory-header">
+    <div class="header-content">
+      <button routerLink="/" class="back-button" aria-label="Back to home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 19-7-7 7-7"></path>
+          <path d="M19 12H5"></path>
+        </svg>
+        Back
+      </button>
+      <h1>Inventory Items</h1>
+      <button class="add-button" aria-label="Add new inventory item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+        Add New
+      </button>
+    </div>
+  </header>
+
+  <div class="table-container">
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity Available</th>
+          <th>Minimum Quantity</th>
+          <th>Status</th>
+          <th>Notify on Low Stock</th>
+          <th class="actions-column">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (inventoryItems.length === 0) {
+        <tr>
+          <td colspan="6" class="empty-state">
+            <p>No inventory items found.</p>
+            <button class="add-button-inline">Add your first item</button>
+          </td>
+        </tr>
+        } @else {
+        @for (item of inventoryItems; track item.id) {
+        <tr>
+          <td class="name-cell">
+            <strong>{{ item.name }}</strong>
+          </td>
+          <td class="quantity-cell">{{ item.quantityAvailable }}</td>
+          <td class="quantity-cell">{{ item.minimumQuantity }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(item)">
+              {{ getStatusText(item) }}
+            </span>
+          </td>
+          <td class="notify-cell">
+            @if (item.notifyOnBelowMinimumQuantity) {
+            <span class="notify-icon">🔔</span>
+            } @else {
+            <span class="notify-icon muted">—</span>
+            }
+          </td>
+          <td class="actions-cell">
+            <button class="action-button edit" aria-label="Edit item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button class="action-button delete" aria-label="Delete item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              </svg>
+            </button>
+          </td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
