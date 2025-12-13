@@ -1,0 +1,129 @@
+<div class="shopping-list-container">
+  <header class="shopping-list-header">
+    <div class="header-content">
+      <button routerLink="/" class="back-button" aria-label="Back to home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 19-7-7 7-7"></path>
+          <path d="M19 12H5"></path>
+        </svg>
+        Back
+      </button>
+      <h1>Shopping Lists</h1>
+      <button class="add-button" aria-label="Create new shopping list">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+        New List
+      </button>
+    </div>
+  </header>
+
+  <div class="cards-grid">
+    @if (shoppingLists.length === 0) {
+    <div class="empty-state">
+      <div class="empty-state-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
+          <path d="M9 11l3 3L22 4"></path>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+        <p class="empty-title">No shopping lists found</p>
+        <p class="empty-description">Create your first shopping list to get started</p>
+        <button class="add-button-inline">Create New List</button>
+      </div>
+    </div>
+    } @else {
+    @for (list of shoppingLists; track list.id) {
+    <div class="shopping-list-card" [class.completed]="list.isCompleted">
+      <div class="card-header">
+        <div class="card-title-row">
+          <h3 class="card-title">Shopping List</h3>
+          @if (list.isCompleted) {
+          <span class="completed-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            Completed
+          </span>
+          }
+        </div>
+        <p class="card-date">{{ formatDate(list.createdAt) }}</p>
+      </div>
+
+      <div class="card-progress">
+        <div class="progress-info">
+          <span class="progress-text">
+            {{ getPurchasedCount(list) }} of {{ list.items.length }} items
+          </span>
+          <span class="progress-percentage">{{ getProgressPercentage(list) }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgressPercentage(list)"></div>
+        </div>
+      </div>
+
+      <div class="card-items">
+        @if (list.items.length === 0) {
+        <p class="no-items">No items in this list</p>
+        } @else {
+        @for (item of list.items.slice(0, 3); track item.id) {
+        <div class="item-row" [class.purchased]="item.isPurchased">
+          <span class="item-check">
+            @if (item.isPurchased) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+            }
+          </span>
+          <span class="item-name">{{ item.inventoryItemName }}</span>
+          <span class="item-quantity">{{ item.quantityToBuy }}</span>
+        </div>
+        }
+        @if (list.items.length > 3) {
+        <p class="more-items">+{{ list.items.length - 3 }} more items</p>
+        }
+        }
+      </div>
+
+      <div class="card-actions">
+        <button class="action-button view" aria-label="View shopping list">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          View
+        </button>
+        @if (!list.isCompleted) {
+        <button class="action-button complete" aria-label="Mark as completed">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+          Complete
+        </button>
+        }
+        <button class="action-button delete" aria-label="Delete shopping list">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>

@@ -12,6 +12,6 @@ export const routes: Routes = [
   },
   {
     path: 'shopping-list',
-    loadComponent: () => import('./home/home').then(m => m.Home), // Placeholder - will be replaced with actual shopping list component
+    loadComponent: () => import('./shopping-list/shopping-list').then(m => m.ShoppingList),
   },
 ];
