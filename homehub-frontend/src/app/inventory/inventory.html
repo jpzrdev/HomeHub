@@ -37,14 +37,16 @@
         @if (isLoading) {
         <tr>
           <td colspan="6" class="loading-state">
-            <p>Loading inventory items...</p>
+            <div class="spinner"></div>
           </td>
         </tr>
         } @else if (inventoryItems.length === 0) {
         <tr>
           <td colspan="6" class="empty-state">
-            <p>No inventory items found.</p>
-            <button class="add-button-inline" (click)="openAddModal()">Add your first item</button>
+            <div class="empty-state-content">
+              <p>No inventory items found.</p>
+              <button class="add-button-inline" (click)="openAddModal()">Add your first item</button>
+            </div>
           </td>
         </tr>
         } @else {
