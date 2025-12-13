@@ -68,11 +68,8 @@
             </span>
           </td>
           <td class="notify-cell">
-            @if (item.notifyOnBelowMinimumQuantity) {
-            <span class="notify-icon">🔔</span>
-            } @else {
-            <span class="notify-icon muted">—</span>
-            }
+            <input type="checkbox" [checked]="item.notifyOnBelowMinimumQuantity" disabled class="notify-checkbox"
+              aria-label="Notify on low stock">
           </td>
           <td class="actions-cell">
             <button class="action-button edit" aria-label="Edit item">

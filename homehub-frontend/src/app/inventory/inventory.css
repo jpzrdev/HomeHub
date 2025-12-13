@@ -147,12 +147,36 @@
   text-align: center;
 }
 
-.notify-icon {
-  font-size: 1.25rem;
+.notify-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: not-allowed;
+  opacity: 1;
+  background-color: transparent;
+  border: 2px solid #4a5568;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  margin: 0;
 }
 
-.notify-icon.muted {
-  opacity: 0.3;
+.notify-checkbox:checked {
+  background-color: transparent;
+  border-color: #4a5568;
+}
+
+.notify-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #4a5568;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .actions-cell {
