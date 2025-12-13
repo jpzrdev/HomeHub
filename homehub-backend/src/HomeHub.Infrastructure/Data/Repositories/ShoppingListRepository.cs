@@ -10,11 +10,25 @@ public class ShoppingListRepository(HomeHubContext context) : RepositoryBase<Sho
 {
     public async Task<ShoppingListEntity?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await GetByIdAsync(id, query => query.Include(sl => sl.Items), cancellationToken);
+        return await _context.Set<ShoppingListEntity>()
+            .Include(sl => sl.Items)
+                .ThenInclude(item => item.InventoryItem)
+            .FirstOrDefaultAsync(sl => sl.Id == id, cancellationToken);
     }
 
     public async Task<PaginationResult<ShoppingListEntity>> GetPaginatedWithItemsAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        return await GetPaginatedAsync(pageNumber, pageSize, cancellationToken, include: query => query.Include(sl => sl.Items));
+        var query = _context.Set<ShoppingListEntity>()
+            .Include(sl => sl.Items)
+                .ThenInclude(item => item.InventoryItem)
+            .AsQueryable();
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var items = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PaginationResult<ShoppingListEntity>(items, totalCount, pageNumber, pageSize);
     }
 }

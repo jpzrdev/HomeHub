@@ -10,7 +10,8 @@
         Back
       </button>
       <h1>Shopping Lists</h1>
-      <button class="add-button" aria-label="Create new shopping list">
+      <button class="add-button" aria-label="Create new shopping list" (click)="generateNewShoppingList()"
+        [disabled]="isLoading">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12h14"></path>
@@ -22,7 +23,16 @@
   </header>
 
   <div class="cards-grid">
-    @if (shoppingLists.length === 0) {
+    @if (isLoading) {
+    <div class="loading-state">
+      <p>Loading shopping lists...</p>
+    </div>
+    } @else if (error) {
+    <div class="error-state">
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="loadShoppingLists()">Retry</button>
+    </div>
+    } @else if (shoppingLists.length === 0) {
     <div class="empty-state">
       <div class="empty-state-content">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
@@ -32,7 +42,7 @@
         </svg>
         <p class="empty-title">No shopping lists found</p>
         <p class="empty-description">Create your first shopping list to get started</p>
-        <button class="add-button-inline">Create New List</button>
+        <button class="add-button-inline" (click)="generateNewShoppingList()">Create New List</button>
       </div>
     </div>
     } @else {

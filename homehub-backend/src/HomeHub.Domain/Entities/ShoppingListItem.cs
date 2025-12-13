@@ -12,7 +12,6 @@ public class ShoppingListItem : BaseEntity
 
     public Guid InventoryItemId { get; private set; }
 
-    [JsonIgnore]
     public InventoryItem InventoryItem { get; private set; } = null!;
     public decimal QuantityToBuy { get; private set; }
     public bool IsPurchased { get; private set; }

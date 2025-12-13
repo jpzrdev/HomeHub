@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ApiService, ShoppingList as ApiShoppingList, ShoppingListItem as ApiShoppingListItem } from '../services/api.service';
 
 export interface ShoppingListItem {
   id: string;
@@ -24,74 +25,56 @@ export interface ShoppingListData {
   templateUrl: './shopping-list.html',
   styleUrl: './shopping-list.css',
 })
-export class ShoppingList {
-  shoppingLists: ShoppingListData[] = [
-    // Mock data - will be replaced with API call
-    {
-      id: '1',
-      isCompleted: false,
-      createdAt: new Date('2024-01-20'),
-      items: [
-        {
-          id: '1-1',
-          inventoryItemId: '1',
-          inventoryItemName: 'Milk',
-          quantityToBuy: 2.0,
-          isPurchased: false,
-        },
-        {
-          id: '1-2',
-          inventoryItemId: '2',
-          inventoryItemName: 'Bread',
-          quantityToBuy: 2.0,
-          isPurchased: true,
-        },
-        {
-          id: '1-3',
-          inventoryItemId: '3',
-          inventoryItemName: 'Eggs',
-          quantityToBuy: 12.0,
-          isPurchased: false,
-        },
-      ],
-    },
-    {
-      id: '2',
-      isCompleted: true,
-      createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-16'),
-      items: [
-        {
-          id: '2-1',
-          inventoryItemId: '4',
-          inventoryItemName: 'Bananas',
-          quantityToBuy: 1.5,
-          isPurchased: true,
-        },
-        {
-          id: '2-2',
-          inventoryItemId: '5',
-          inventoryItemName: 'Apples',
-          quantityToBuy: 2.0,
-          isPurchased: true,
-        },
-      ],
-    },
-    {
-      id: '3',
-      isCompleted: false,
-      createdAt: new Date('2024-01-22'),
-      items: [
-        {
-          id: '3-1',
-          inventoryItemId: '6',
-          inventoryItemName: 'Cheese',
-          quantityToBuy: 1.0,
-          isPurchased: false,
-        },
-      ],
-    },
-  ];
+export class ShoppingList implements OnInit {
+  private readonly apiService = inject(ApiService);
+
+  shoppingLists: ShoppingListData[] = [];
+  isLoading = false;
+  error: string | null = null;
+
+  ngOnInit(): void {
+    this.loadShoppingLists();
+  }
+
+  loadShoppingLists(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    console.log('Loading shopping lists from API...');
+    this.apiService.getShoppingLists(1, 100).subscribe({
+      next: (response) => {
+        console.log('Shopping lists API response:', response);
+        this.shoppingLists = response.items.map((list) => this.mapApiShoppingListToComponentShoppingList(list));
+        console.log('Mapped shopping lists:', this.shoppingLists);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load shopping lists. Please try again later.';
+        this.isLoading = false;
+        console.error('Error loading shopping lists:', err);
+      }
+    });
+  }
+
+  private mapApiShoppingListToComponentShoppingList(apiList: ApiShoppingList): ShoppingListData {
+    return {
+      id: apiList.id,
+      isCompleted: apiList.isCompleted,
+      createdAt: new Date(apiList.createdAt),
+      updatedAt: apiList.updatedAt ? new Date(apiList.updatedAt) : undefined,
+      items: apiList.items?.map((item) => this.mapApiItemToComponentItem(item)) || [],
+    };
+  }
+
+  private mapApiItemToComponentItem(apiItem: ApiShoppingListItem): ShoppingListItem {
+    return {
+      id: apiItem.id,
+      inventoryItemId: apiItem.inventoryItemId,
+      inventoryItemName: apiItem.inventoryItem?.name || 'Unknown Item',
+      quantityToBuy: apiItem.quantityToBuy,
+      isPurchased: apiItem.isPurchased,
+    };
+  }
 
   getProgressPercentage(list: ShoppingListData): number {
     if (list.items.length === 0) return 0;
@@ -110,4 +93,22 @@ export class ShoppingList {
       year: 'numeric',
     }).format(new Date(date));
   }
+
+  generateNewShoppingList(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.apiService.generateShoppingList().subscribe({
+      next: () => {
+        // Reload shopping lists after generating a new one
+        this.loadShoppingLists();
+      },
+      error: (err) => {
+        this.error = 'Failed to generate shopping list. Please try again.';
+        this.isLoading = false;
+        console.error('Error generating shopping list:', err);
+      }
+    });
+  }
+
 }
