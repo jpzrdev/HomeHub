@@ -40,6 +40,15 @@
             <div class="spinner"></div>
           </td>
         </tr>
+        } @else if (hasError) {
+        <tr>
+          <td colspan="6" class="error-state">
+            <div class="error-state-content">
+              <p>Failed to load inventory items.</p>
+              <button class="retry-button" (click)="loadInventoryItems()">Retry</button>
+            </div>
+          </td>
+        </tr>
         } @else if (inventoryItems.length === 0) {
         <tr>
           <td colspan="6" class="empty-state">

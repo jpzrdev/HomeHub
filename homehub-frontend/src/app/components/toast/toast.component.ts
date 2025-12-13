@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService, Toast } from '../../services/toast.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ToastComponent implements OnInit, OnDestroy {
   private readonly toastService = inject(ToastService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroy$ = new Subject<void>();
 
   toasts: Toast[] = [];
@@ -20,8 +21,12 @@ export class ToastComponent implements OnInit, OnDestroy {
     this.toastService.toasts$
       .pipe(takeUntil(this.destroy$))
       .subscribe(toast => {
-        this.toasts.push(toast);
-        this.autoRemove(toast);
+        // Defer update to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.toasts.push(toast);
+          this.autoRemove(toast);
+          this.cdr.detectChanges();
+        }, 0);
       });
   }
 
@@ -32,6 +37,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 
   remove(toast: Toast): void {
     this.toasts = this.toasts.filter(t => t.id !== toast.id);
+    this.cdr.detectChanges();
   }
 
   private autoRemove(toast: Toast): void {
