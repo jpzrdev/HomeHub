@@ -1,7 +1,9 @@
-<div class="shopping-list-container">
-  <header class="shopping-list-header">
-    <div class="header-content">
-      <button routerLink="/" class="back-button" aria-label="Back to home">
+<div class="min-h-screen bg-gray-50 p-8 md:p-4">
+  <header class="mb-8">
+    <div class="flex items-center justify-between gap-4 max-w-7xl mx-auto flex-col md:flex-row">
+      <button routerLink="/"
+        class="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-lg text-gray-600 text-base cursor-pointer transition-all duration-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:-translate-x-0.5"
+        aria-label="Back to home">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m12 19-7-7 7-7"></path>
@@ -9,9 +11,10 @@
         </svg>
         Back
       </button>
-      <h1>Shopping Lists</h1>
-      <button class="add-button" aria-label="Create new shopping list" (click)="generateNewShoppingList()"
-        [disabled]="isLoading">
+      <h1 class="flex-1 text-3xl md:text-2xl font-bold text-gray-900 m-0">Shopping Lists</h1>
+      <button
+        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-pink-400 to-rose-500 border-none rounded-lg text-white text-base font-semibold cursor-pointer transition-all duration-200 shadow-lg shadow-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-rose-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+        aria-label="Create new shopping list" (click)="generateNewShoppingList()" [disabled]="isLoading">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12h14"></path>
@@ -22,32 +25,38 @@
     </div>
   </header>
 
-  <div class="cards-grid">
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 max-w-7xl mx-auto md:grid-cols-1 md:gap-4">
     @if (isLoading) {
-    <div class="loading-state">
+    <div class="col-span-full flex items-center justify-center min-h-[400px]">
       <p>Loading shopping lists...</p>
     </div>
     } @else if (shoppingLists.length === 0) {
-    <div class="empty-state">
-      <div class="empty-state-content">
+    <div class="col-span-full flex items-center justify-center min-h-[400px]">
+      <div class="text-center max-w-md">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="text-gray-300 mx-auto mb-6">
           <path d="M9 11l3 3L22 4"></path>
           <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
         </svg>
-        <p class="empty-title">No shopping lists found</p>
-        <p class="empty-description">Create your first shopping list to get started</p>
-        <button class="add-button-inline" (click)="generateNewShoppingList()">Create New List</button>
+        <p class="text-2xl font-bold text-gray-900 m-0 mb-2">No shopping lists found</p>
+        <p class="text-base text-gray-500 m-0 mb-8">Create your first shopping list to get started</p>
+        <button
+          class="px-6 py-3 bg-gradient-to-br from-pink-400 to-rose-500 border-none rounded-lg text-white text-base font-semibold cursor-pointer transition-all duration-200 shadow-lg shadow-rose-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-rose-500/40"
+          (click)="generateNewShoppingList()">Create New List</button>
       </div>
     </div>
     } @else {
     @for (list of shoppingLists; track list.id) {
-    <div class="shopping-list-card" [class.completed]="list.isCompleted">
-      <div class="card-header">
-        <div class="card-title-row">
-          <h3 class="card-title">Shopping List</h3>
+    <div
+      class="bg-white rounded-xl p-6 shadow-md transition-all duration-300 flex flex-col gap-4 border-2 border-transparent hover:-translate-y-1 hover:shadow-lg md:p-5"
+      [class.border-green-200]="list.isCompleted" [class.opacity-85]="list.isCompleted">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-xl font-bold text-gray-900 m-0">Shopping List</h3>
           @if (list.isCompleted) {
-          <span class="completed-badge">
+          <span
+            class="flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold uppercase tracking-wide">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 6L9 17l-5-5"></path>
@@ -56,28 +65,31 @@
           </span>
           }
         </div>
-        <p class="card-date">{{ formatDate(list.createdAt) }}</p>
+        <p class="text-sm text-gray-500 m-0">{{ formatDate(list.createdAt) }}</p>
       </div>
 
-      <div class="card-progress">
-        <div class="progress-info">
-          <span class="progress-text">
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-600 font-medium">
             {{ getPurchasedCount(list) }} of {{ list.items.length }} items
           </span>
-          <span class="progress-percentage">{{ getProgressPercentage(list) }}%</span>
+          <span class="text-sm text-indigo-500 font-semibold">{{ getProgressPercentage(list) }}%</span>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="getProgressPercentage(list)"></div>
+        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-300" [class.bg-gradient-to-r]="!list.isCompleted"
+            [class.from-indigo-500]="!list.isCompleted" [class.to-purple-600]="!list.isCompleted"
+            [class.bg-green-500]="list.isCompleted" [style.width.%]="getProgressPercentage(list)"></div>
         </div>
       </div>
 
-      <div class="card-items">
+      <div class="flex flex-col gap-2 min-h-[80px]">
         @if (list.items.length === 0) {
-        <p class="no-items">No items in this list</p>
+        <p class="text-sm text-gray-400 text-center py-4 m-0">No items in this list</p>
         } @else {
         @for (item of list.items.slice(0, 3); track item.id) {
-        <div class="item-row" [class.purchased]="item.isPurchased">
-          <span class="item-check">
+        <div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-b-0"
+          [class.opacity-60]="item.isPurchased">
+          <span class="flex items-center text-indigo-500 flex-shrink-0" [class.text-green-500]="item.isPurchased">
             @if (item.isPurchased) {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -90,18 +102,21 @@
             </svg>
             }
           </span>
-          <span class="item-name">{{ item.inventoryItemName }}</span>
-          <span class="item-quantity">{{ item.quantityToBuy }}</span>
+          <span class="flex-1 text-sm text-gray-800 font-medium" [class.line-through]="item.isPurchased">{{
+            item.inventoryItemName }}</span>
+          <span class="text-sm text-gray-500 font-semibold font-mono">{{ item.quantityToBuy }}</span>
         </div>
         }
         @if (list.items.length > 3) {
-        <p class="more-items">+{{ list.items.length - 3 }} more items</p>
+        <p class="text-sm text-gray-500 italic text-center m-1 mt-0">+{{ list.items.length - 3 }} more items</p>
         }
         }
       </div>
 
-      <div class="card-actions">
-        <button class="action-button view" aria-label="View shopping list">
+      <div class="flex gap-2 mt-auto pt-4 border-t border-gray-200">
+        <button
+          class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-transparent border border-gray-200 rounded-md text-gray-600 text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-blue-400 hover:text-blue-700"
+          aria-label="View shopping list">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -110,7 +125,9 @@
           View
         </button>
         @if (!list.isCompleted) {
-        <button class="action-button complete" aria-label="Mark as completed">
+        <button
+          class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-transparent border border-gray-200 rounded-md text-gray-600 text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-gray-50 hover:border-green-500 hover:text-green-700"
+          aria-label="Mark as completed">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 6L9 17l-5-5"></path>
@@ -118,7 +135,9 @@
           Complete
         </button>
         }
-        <button class="action-button delete" aria-label="Delete shopping list">
+        <button
+          class="flex-none px-2.5 py-2.5 bg-transparent border border-gray-200 rounded-md text-gray-600 text-sm font-medium cursor-pointer transition-all duration-200 min-w-[40px] hover:bg-gray-50 hover:border-red-400 hover:text-red-700"
+          aria-label="Delete shopping list">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 6h18"></path>

@@ -24,7 +24,6 @@ export interface ShoppingListData {
   selector: 'app-shopping-list',
   imports: [CommonModule, RouterLink],
   templateUrl: './shopping-list.html',
-  styleUrl: './shopping-list.css',
 })
 export class ShoppingList implements OnInit {
   private readonly apiService = inject(ApiService);

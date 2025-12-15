@@ -14,7 +14,6 @@ export interface InventoryItemFormData {
   selector: 'app-inventory-item-modal',
   imports: [CommonModule, FormsModule],
   templateUrl: './inventory-item-modal.html',
-  styleUrl: './inventory-item-modal.css',
   standalone: true
 })
 export class InventoryItemModal implements OnInit, OnChanges {

@@ -19,7 +19,6 @@ export interface InventoryItem {
   selector: 'app-inventory',
   imports: [CommonModule, RouterLink, InventoryItemModal],
   templateUrl: './inventory.html',
-  styleUrl: './inventory.css',
 })
 export class Inventory implements OnInit {
   private readonly apiService = inject(ApiService);

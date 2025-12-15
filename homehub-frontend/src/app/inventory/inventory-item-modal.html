@@ -1,9 +1,15 @@
 @if (isOpen) {
-<div class="modal-backdrop" (click)="onBackdropClick($event)">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ isEditMode ? 'Edit Inventory Item' : 'Add New Inventory Item' }}</h2>
-      <button class="close-button" (click)="onClose()" aria-label="Close modal">
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4 animate-[fadeIn_0.2s_ease]"
+  (click)="onBackdropClick($event)">
+  <div
+    class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col animate-[slideUp_0.3s_ease] overflow-hidden"
+    (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 md:p-4">
+      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">{{ isEditMode ? 'Edit Inventory Item' : 'Add New
+        Inventory Item' }}</h2>
+      <button
+        class="bg-transparent border-none text-gray-500 cursor-pointer p-2 rounded-md transition-all duration-200 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600"
+        (click)="onClose()" aria-label="Close modal">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6L6 18"></path>
@@ -12,48 +18,62 @@
       </button>
     </div>
 
-    <div class="modal-body">
+    <div class="p-6 overflow-y-auto flex-1 md:p-4">
       <form (ngSubmit)="onSave()" #form="ngForm">
-        <div class="form-group">
-          <label for="name">Name <span class="required">*</span></label>
-          <input type="text" id="name" name="name" [(ngModel)]="formData.name" class="form-input"
-            [class.error]="errors['name']" placeholder="Enter item name" required>
+        <div class="mb-6 last:mb-0">
+          <label for="name" class="block mb-2 font-semibold text-gray-600 text-sm">Name <span
+              class="text-red-600">*</span></label>
+          <input type="text" id="name" name="name" [(ngModel)]="formData.name"
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+            [class.border-red-600]="errors['name']" [class.focus:ring-red-600/10]="errors['name']"
+            [class.focus:border-red-600]="errors['name']" placeholder="Enter item name" required>
           @if (errors['name']) {
-          <span class="error-message">{{ errors['name'] }}</span>
+          <span class="block mt-2 text-red-600 text-sm">{{ errors['name'] }}</span>
           }
         </div>
 
-        <div class="form-group">
-          <label for="quantityAvailable">Quantity Available</label>
+        <div class="mb-6 last:mb-0">
+          <label for="quantityAvailable" class="block mb-2 font-semibold text-gray-600 text-sm">Quantity
+            Available</label>
           <input type="number" id="quantityAvailable" name="quantityAvailable" [(ngModel)]="formData.quantityAvailable"
-            class="form-input" [class.error]="errors['quantityAvailable']" placeholder="0" min="0" step="0.01">
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+            [class.border-red-600]="errors['quantityAvailable']"
+            [class.focus:ring-red-600/10]="errors['quantityAvailable']"
+            [class.focus:border-red-600]="errors['quantityAvailable']" placeholder="0" min="0" step="0.01">
           @if (errors['quantityAvailable']) {
-          <span class="error-message">{{ errors['quantityAvailable'] }}</span>
+          <span class="block mt-2 text-red-600 text-sm">{{ errors['quantityAvailable'] }}</span>
           }
         </div>
 
-        <div class="form-group">
-          <label for="minimumQuantity">Minimum Quantity</label>
+        <div class="mb-6 last:mb-0">
+          <label for="minimumQuantity" class="block mb-2 font-semibold text-gray-600 text-sm">Minimum Quantity</label>
           <input type="number" id="minimumQuantity" name="minimumQuantity" [(ngModel)]="formData.minimumQuantity"
-            class="form-input" [class.error]="errors['minimumQuantity']" placeholder="0" min="0" step="0.01">
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+            [class.border-red-600]="errors['minimumQuantity']" [class.focus:ring-red-600/10]="errors['minimumQuantity']"
+            [class.focus:border-red-600]="errors['minimumQuantity']" placeholder="0" min="0" step="0.01">
           @if (errors['minimumQuantity']) {
-          <span class="error-message">{{ errors['minimumQuantity'] }}</span>
+          <span class="block mt-2 text-red-600 text-sm">{{ errors['minimumQuantity'] }}</span>
           }
         </div>
 
-        <div class="form-group checkbox-group">
-          <label class="checkbox-label">
+        <div class="mb-6 mt-4 last:mb-0">
+          <label class="flex items-center gap-3 cursor-pointer font-medium text-gray-600">
             <input type="checkbox" id="notifyOnBelowMinimumQuantity" name="notifyOnBelowMinimumQuantity"
-              [(ngModel)]="formData.notifyOnBelowMinimumQuantity" class="checkbox-input">
-            <span>Notify when quantity falls below minimum</span>
+              [(ngModel)]="formData.notifyOnBelowMinimumQuantity"
+              class="w-5 h-5 min-w-5 min-h-5 cursor-pointer accent-indigo-500 bg-white border-2 border-gray-200 rounded flex-shrink-0 m-0 relative transition-all duration-200 appearance-none checked:bg-indigo-500 checked:border-indigo-500 checked:after:content-[''] checked:after:absolute checked:after:left-[6px] checked:after:top-[2px] checked:after:w-[6px] checked:after:h-[10px] checked:after:border-solid checked:after:border-white checked:after:border-t-0 checked:after:border-r-2 checked:after:border-b-2 checked:after:border-l-0 checked:after:rotate-45 hover:border-gray-300 focus:outline-none focus:ring-3 focus:ring-indigo-500/10 focus:border-indigo-500">
+            <span class="flex items-center">Notify when quantity falls below minimum</span>
           </label>
         </div>
       </form>
     </div>
 
-    <div class="modal-footer">
-      <button type="button" class="button button-secondary" (click)="onClose()">Cancel</button>
-      <button type="button" class="button button-primary" (click)="onSave()">
+    <div class="flex justify-end gap-4 p-6 border-t border-gray-200 md:p-4">
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+        (click)="onClose()">Cancel</button>
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/40"
+        (click)="onSave()">
         {{ isEditMode ? 'Update' : 'Add' }} Item
       </button>
     </div>

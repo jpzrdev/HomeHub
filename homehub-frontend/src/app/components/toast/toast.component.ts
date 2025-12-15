@@ -8,7 +8,6 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './toast.component.html',
-  styleUrl: './toast.component.css'
 })
 export class ToastComponent implements OnInit, OnDestroy {
   private readonly toastService = inject(ToastService);
