@@ -1,4 +1,5 @@
 using HomeHub.Application.Features.Inventory.Interfaces;
+using HomeHub.Application.Features.Recipe.Interfaces;
 using HomeHub.Application.Features.ShoppingList.Interfaces;
 using HomeHub.Infrastructure.Data;
 using HomeHub.Infrastructure.Data.Repositories;
@@ -20,6 +21,7 @@ public static class DependencyInjection
 
         services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
         services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
 
         return services;
     }
