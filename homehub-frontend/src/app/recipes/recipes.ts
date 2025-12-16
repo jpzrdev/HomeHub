@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ApiService, Recipe as ApiRecipe } from '../services/api.service';
+import { ApiService, Recipe as ApiRecipe, CreateRecipeRequest } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
+import { RecipeModal } from './recipe-modal';
 
 export interface Recipe {
   id: string;
@@ -14,7 +15,7 @@ export interface Recipe {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RecipeModal],
   templateUrl: './recipes.html',
 })
 export class Recipes implements OnInit {
@@ -25,6 +26,7 @@ export class Recipes implements OnInit {
   recipes: Recipe[] = [];
   isLoading = false;
   hasError = false;
+  isModalOpen = false;
 
   ngOnInit(): void {
     this.loadRecipes();
@@ -75,7 +77,25 @@ export class Recipes implements OnInit {
   }
 
   openAddRecipe(): void {
-    // TODO: Implement add recipe modal/form
-    console.log('Add new recipe clicked');
+    this.isModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+  }
+
+  saveRecipe(recipe: CreateRecipeRequest): void {
+    this.apiService.createRecipe(recipe).subscribe({
+      next: () => {
+        this.toastService.success('Recipe created successfully!');
+        this.loadRecipes();
+        this.closeModal();
+      },
+      error: (err) => {
+        this.toastService.error('Failed to create recipe. Please try again.');
+        console.error('Error creating recipe:', err);
+      }
+    });
   }
 }

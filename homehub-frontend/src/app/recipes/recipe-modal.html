@@ -1,0 +1,185 @@
+@if (isOpen) {
+<div
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4 animate-[fadeIn_0.2s_ease] modal-backdrop"
+  (click)="onBackdropClick($event)">
+  <div
+    class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-[slideUp_0.3s_ease] overflow-hidden"
+    (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 md:p-4">
+      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">Create New Recipe</h2>
+      <button
+        class="bg-transparent border-none text-gray-500 cursor-pointer p-2 rounded-md transition-all duration-200 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600"
+        (click)="onClose()" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto flex-1 md:p-4">
+      <form (ngSubmit)="onSave()" #form="ngForm">
+        <!-- Title -->
+        <div class="mb-6">
+          <label for="title" class="block mb-2 font-semibold text-gray-600 text-sm">Title <span
+              class="text-red-600">*</span></label>
+          <input type="text" id="title" name="title" [(ngModel)]="formData.title"
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/10"
+            [class.border-red-600]="errors['title']" [class.focus:ring-red-600/10]="errors['title']"
+            [class.focus:border-red-600]="errors['title']" placeholder="Enter recipe title" required>
+          @if (errors['title']) {
+          <span class="block mt-2 text-red-600 text-sm">{{ errors['title'] }}</span>
+          }
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+          <label for="description" class="block mb-2 font-semibold text-gray-600 text-sm">Description</label>
+          <textarea id="description" name="description" [(ngModel)]="formData.description" rows="3"
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/10 resize-none"
+            placeholder="Enter recipe description"></textarea>
+        </div>
+
+        <!-- Steps Section -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <label class="block font-semibold text-gray-600 text-sm">Steps</label>
+            <button type="button"
+              class="flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-orange-400 to-amber-500 border-none rounded-lg text-white text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md"
+              (click)="addStep()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+              </svg>
+              Add Step
+            </button>
+          </div>
+
+          @if (formData.steps.length === 0) {
+          <p class="text-sm text-gray-400 italic text-center py-4">No steps added yet. Click "Add Step" to get started.
+          </p>
+          } @else {
+          <div class="space-y-4">
+            @for (step of formData.steps; track step.order; let i = $index) {
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <span
+                  class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full text-sm font-semibold">
+                  {{ step.order }}
+                </span>
+                <button type="button"
+                  class="flex-shrink-0 p-1.5 bg-transparent border border-red-200 rounded-md text-red-600 cursor-pointer transition-all duration-200 hover:bg-red-50 hover:border-red-300"
+                  (click)="removeStep(i)" aria-label="Remove step">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+              <textarea [(ngModel)]="step.description" [name]="'step_' + i" rows="2"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 resize-none"
+                [class.border-red-600]="errors['step_' + i]" placeholder="Enter step description"></textarea>
+              @if (errors['step_' + i]) {
+              <span class="block mt-2 text-red-600 text-xs">{{ errors['step_' + i] }}</span>
+              }
+            </div>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <label class="block font-semibold text-gray-600 text-sm">Ingredients</label>
+            <button type="button"
+              class="flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-orange-400 to-amber-500 border-none rounded-lg text-white text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md"
+              (click)="addIngredient()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+              </svg>
+              Add Ingredient
+            </button>
+          </div>
+
+          @if (formData.ingredients.length === 0) {
+          <p class="text-sm text-gray-400 italic text-center py-4">No ingredients added yet. Click "Add Ingredient" to
+            get started.</p>
+          } @else {
+          <div class="space-y-4">
+            @for (ingredient of formData.ingredients; track $index; let i = $index) {
+            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <span class="flex-shrink-0 text-sm font-semibold text-gray-700">Ingredient {{ i + 1 }}</span>
+                <button type="button"
+                  class="flex-shrink-0 p-1.5 bg-transparent border border-red-200 rounded-md text-red-600 cursor-pointer transition-all duration-200 hover:bg-red-50 hover:border-red-300"
+                  (click)="removeIngredient(i)" aria-label="Remove ingredient">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-4">
+                <div>
+                  <label [for]="'ingredient_item_' + i" class="block mb-2 text-xs font-medium text-gray-600">Inventory
+                    Item <span class="text-red-600">*</span></label>
+                  @if (isLoadingInventory) {
+                  <div class="px-3 py-3 border border-gray-200 rounded-lg text-sm text-gray-400">Loading items...</div>
+                  } @else {
+                  <select [(ngModel)]="ingredient.inventoryItemId" [name]="'ingredient_item_' + i"
+                    [id]="'ingredient_item_' + i"
+                    class="w-full px-3 py-3 border border-gray-200 rounded-lg text-sm bg-white text-gray-900 transition-all duration-200 box-border focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10"
+                    [class.border-red-600]="errors['ingredient_item_' + i]">
+                    <option value="">Select an item</option>
+                    @for (item of inventoryItems; track item.id) {
+                    <option [value]="item.id">{{ item.name }}</option>
+                    }
+                  </select>
+                  }
+                  @if (errors['ingredient_item_' + i]) {
+                  <span class="block mt-2 text-red-600 text-xs">{{ errors['ingredient_item_' + i] }}</span>
+                  }
+                </div>
+                <div>
+                  <label [for]="'ingredient_quantity_' + i"
+                    class="block mb-2 text-xs font-medium text-gray-600">Quantity <span
+                      class="text-red-600">*</span></label>
+                  <input type="number" [(ngModel)]="ingredient.quantity" [name]="'ingredient_quantity_' + i"
+                    [id]="'ingredient_quantity_' + i" min="0.01" step="0.01"
+                    class="w-full px-3 py-3 border border-gray-200 rounded-lg text-sm bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                    [class.border-red-600]="errors['ingredient_quantity_' + i]" placeholder="0.00">
+                  @if (errors['ingredient_quantity_' + i]) {
+                  <span class="block mt-2 text-red-600 text-xs">{{ errors['ingredient_quantity_' + i] }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </form>
+    </div>
+
+    <div class="flex justify-end gap-4 p-6 border-t border-gray-200 md:p-4">
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+        (click)="onClose()">Cancel</button>
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-gradient-to-br from-orange-400 to-amber-500 text-white shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
+        (click)="onSave()">
+        Create Recipe
+      </button>
+    </div>
+  </div>
+</div>
+}
