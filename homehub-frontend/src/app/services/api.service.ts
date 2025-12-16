@@ -53,6 +53,31 @@ export interface UpdateInventoryItemRequest {
   minimumQuantity?: number;
 }
 
+export interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface RecipeStepRequest {
+  order: number;
+  description: string;
+}
+
+export interface RecipeIngredientRequest {
+  inventoryItemId: string;
+  quantity: number;
+}
+
+export interface CreateRecipeRequest {
+  title: string;
+  description: string;
+  steps: RecipeStepRequest[];
+  ingredients: RecipeIngredientRequest[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -100,5 +125,22 @@ export class ApiService {
 
   generateShoppingList(): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/ShoppingList/generate`, {});
+  }
+
+  // Recipe endpoints
+  getRecipes(pageNumber: number = 1, pageSize: number = 100): Observable<PaginatedResponse<Recipe>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<PaginatedResponse<Recipe>>(`${this.apiUrl}/Recipe`, { params });
+  }
+
+  getRecipeById(id: string): Observable<Recipe> {
+    return this.http.get<Recipe>(`${this.apiUrl}/Recipe/${id}`);
+  }
+
+  createRecipe(recipe: CreateRecipeRequest): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/Recipe`, recipe);
   }
 }
