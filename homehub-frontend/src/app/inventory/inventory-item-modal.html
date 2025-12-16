@@ -55,15 +55,6 @@
           <span class="block mt-2 text-red-600 text-sm">{{ errors['minimumQuantity'] }}</span>
           }
         </div>
-
-        <div class="mb-6 mt-4 last:mb-0">
-          <label class="flex items-center gap-3 cursor-pointer font-medium text-gray-600">
-            <input type="checkbox" id="notifyOnBelowMinimumQuantity" name="notifyOnBelowMinimumQuantity"
-              [(ngModel)]="formData.notifyOnBelowMinimumQuantity"
-              class="w-5 h-5 min-w-5 min-h-5 cursor-pointer accent-indigo-500 bg-white border-2 border-gray-200 rounded flex-shrink-0 m-0 relative transition-all duration-200 appearance-none checked:bg-indigo-500 checked:border-indigo-500 checked:after:content-[''] checked:after:absolute checked:after:left-[6px] checked:after:top-[2px] checked:after:w-[6px] checked:after:h-[10px] checked:after:border-solid checked:after:border-white checked:after:border-t-0 checked:after:border-r-2 checked:after:border-b-2 checked:after:border-l-0 checked:after:rotate-45 hover:border-gray-300 focus:outline-none focus:ring-3 focus:ring-indigo-500/10 focus:border-indigo-500">
-            <span class="flex items-center">Notify when quantity falls below minimum</span>
-          </label>
-        </div>
       </form>
     </div>
 

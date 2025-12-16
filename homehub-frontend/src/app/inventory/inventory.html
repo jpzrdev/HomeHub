@@ -38,8 +38,6 @@
               Minimum Quantity</th>
             <th class="px-6 py-4 text-left font-semibold text-sm uppercase tracking-wide md:px-4 md:py-3 md:text-sm">
               Status</th>
-            <th class="px-6 py-4 text-left font-semibold text-sm uppercase tracking-wide md:px-4 md:py-3 md:text-sm">
-              Notify on Low Stock</th>
             <th
               class="w-[120px] text-center px-6 py-4 text-left font-semibold text-sm uppercase tracking-wide md:px-4 md:py-3 md:text-sm">
               Actions</th>
@@ -48,7 +46,7 @@
         <tbody>
           @if (isLoading) {
           <tr>
-            <td colspan="6" class="text-center p-0 align-middle h-[500px] relative">
+            <td colspan="5" class="text-center p-0 align-middle h-[500px] relative">
               <div
                 class="w-18 h-18 border-6 border-gray-200 border-t-indigo-500 rounded-full animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               </div>
@@ -56,7 +54,7 @@
           </tr>
           } @else if (hasError) {
           <tr>
-            <td colspan="6" class="text-center p-0 text-gray-500 h-[500px] align-middle relative">
+            <td colspan="5" class="text-center p-0 text-gray-500 h-[500px] align-middle relative">
               <div
                 class="flex flex-col items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-8 py-16">
                 <p class="mb-6 text-lg">Failed to load inventory items.</p>
@@ -68,7 +66,7 @@
           </tr>
           } @else if (inventoryItems.length === 0) {
           <tr>
-            <td colspan="6" class="text-center p-0 text-gray-500 h-[500px] align-middle relative">
+            <td colspan="5" class="text-center p-0 text-gray-500 h-[500px] align-middle relative">
               <div
                 class="flex flex-col items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-8 py-16">
                 <p class="mb-6 text-lg">No inventory items found.</p>
@@ -94,11 +92,6 @@
                 [class.bg-green-100]="!isBelowMinimum(item)" [class.text-green-800]="!isBelowMinimum(item)">
                 {{ getStatusText(item) }}
               </span>
-            </td>
-            <td class="text-center px-6 py-4 text-gray-600 md:px-4 md:py-3 md:text-sm">
-              <input type="checkbox" [checked]="item.notifyOnBelowMinimumQuantity" disabled
-                class="w-[18px] h-[18px] cursor-not-allowed opacity-100 bg-transparent border-2 border-gray-600 rounded appearance-none relative m-0 checked:bg-transparent checked:border-gray-600 checked:after:content-['✓'] checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2 checked:after:text-gray-600 checked:after:text-sm checked:after:font-bold checked:after:leading-none"
-                aria-label="Notify on low stock">
             </td>
             <td class="flex gap-2 px-6 py-4 text-gray-600 md:px-4 md:py-3 md:text-sm">
               <button

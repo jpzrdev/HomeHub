@@ -25,8 +25,7 @@ public class GetInventoryItemByIdQueryHandlerTests
         var expectedItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.0m
         );
 
         var query = new GetInventoryItemByIdQuery(itemId);
@@ -44,7 +43,6 @@ public class GetInventoryItemByIdQueryHandlerTests
         Assert.Equal(expectedItem.Name, result.Name);
         Assert.Equal(expectedItem.QuantityAvailable, result.QuantityAvailable);
         Assert.Equal(expectedItem.MinimumQuantity, result.MinimumQuantity);
-        Assert.Equal(expectedItem.NotifyOnBelowMinimumQuantity, result.NotifyOnBelowMinimumQuantity);
 
         _repositoryMock.Verify(r => r.GetByIdAsync(itemId, It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -76,8 +74,7 @@ public class GetInventoryItemByIdQueryHandlerTests
         var expectedItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var query = new GetInventoryItemByIdQuery(itemId);
@@ -101,8 +98,8 @@ public class GetInventoryItemByIdQueryHandlerTests
         var itemId1 = Guid.NewGuid();
         var itemId2 = Guid.NewGuid();
 
-        var item1 = new InventoryItem("Item 1", 100.0m, 10.0m, false);
-        var item2 = new InventoryItem("Item 2", 200.0m, 20.0m, true);
+        var item1 = new InventoryItem("Item 1", 100.0m, 10.0m);
+        var item2 = new InventoryItem("Item 2", 200.0m, 20.0m);
 
         var query = new GetInventoryItemByIdQuery(itemId2);
 

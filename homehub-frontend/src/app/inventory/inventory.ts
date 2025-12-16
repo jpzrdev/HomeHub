@@ -10,7 +10,6 @@ export interface InventoryItem {
   name: string;
   quantityAvailable: number;
   minimumQuantity: number;
-  notifyOnBelowMinimumQuantity: boolean;
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -76,7 +75,6 @@ export class Inventory implements OnInit {
       name: apiItem.name,
       quantityAvailable: apiItem.quantityAvailable,
       minimumQuantity: apiItem.minimumQuantity,
-      notifyOnBelowMinimumQuantity: apiItem.notifyOnBelowMinimumQuantity,
       createdAt: new Date(apiItem.createdAt),
       updatedAt: apiItem.updatedAt ? new Date(apiItem.updatedAt) : undefined,
     };

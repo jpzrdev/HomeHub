@@ -19,8 +19,7 @@ public class UpdateInventoryItemCommandHandler(IInventoryItemRepository reposito
         inventoryItem.Update(
             request.Name,
             request.QuantityAvailable,
-            request.MinimumQuantity,
-            request.NotifyOnBelowMinimumQuantity);
+            request.MinimumQuantity);
 
         await repository.UpdateAsync(inventoryItem, cancellationToken);
 

@@ -25,16 +25,14 @@ public class UpdateInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Original Name",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new UpdateInventoryItemCommand(
             Id: itemId,
             Name: "Updated Name",
             QuantityAvailable: 150.0m,
-            MinimumQuantity: 15.0m,
-            NotifyOnBelowMinimumQuantity: true
+            MinimumQuantity: 15.0m
         );
 
         _repositoryMock
@@ -53,7 +51,6 @@ public class UpdateInventoryItemCommandHandlerTests
         Assert.Equal("Updated Name", result.Name);
         Assert.Equal(150.0m, result.QuantityAvailable);
         Assert.Equal(15.0m, result.MinimumQuantity);
-        Assert.True(result.NotifyOnBelowMinimumQuantity);
 
         _repositoryMock.Verify(r => r.GetByIdAsync(itemId, It.IsAny<CancellationToken>()), Times.Once);
         _repositoryMock.Verify(r => r.UpdateAsync(existingItem, It.IsAny<CancellationToken>()), Times.Once);
@@ -68,8 +65,7 @@ public class UpdateInventoryItemCommandHandlerTests
             Id: itemId,
             Name: "Updated Name",
             QuantityAvailable: null,
-            MinimumQuantity: null,
-            NotifyOnBelowMinimumQuantity: null
+            MinimumQuantity: null
         );
 
         _repositoryMock
@@ -92,16 +88,14 @@ public class UpdateInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Original Name",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new UpdateInventoryItemCommand(
             Id: itemId,
             Name: "Updated Name",
             QuantityAvailable: null,
-            MinimumQuantity: null,
-            NotifyOnBelowMinimumQuantity: null
+            MinimumQuantity: null
         );
 
         _repositoryMock
@@ -120,7 +114,6 @@ public class UpdateInventoryItemCommandHandlerTests
         Assert.Equal("Updated Name", result.Name);
         Assert.Equal(100.0m, result.QuantityAvailable); // Unchanged
         Assert.Equal(10.0m, result.MinimumQuantity); // Unchanged
-        Assert.False(result.NotifyOnBelowMinimumQuantity); // Unchanged
     }
 
     [Fact]
@@ -131,16 +124,14 @@ public class UpdateInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Original Name",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new UpdateInventoryItemCommand(
             Id: itemId,
             Name: null,
             QuantityAvailable: 200.0m,
-            MinimumQuantity: null,
-            NotifyOnBelowMinimumQuantity: null
+            MinimumQuantity: null
         );
 
         _repositoryMock
@@ -159,7 +150,6 @@ public class UpdateInventoryItemCommandHandlerTests
         Assert.Equal("Original Name", result.Name); // Unchanged
         Assert.Equal(200.0m, result.QuantityAvailable); // Updated
         Assert.Equal(10.0m, result.MinimumQuantity); // Unchanged
-        Assert.False(result.NotifyOnBelowMinimumQuantity); // Unchanged
     }
 
     [Fact]
@@ -170,16 +160,14 @@ public class UpdateInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new UpdateInventoryItemCommand(
             Id: itemId,
             Name: "Updated Name",
             QuantityAvailable: null,
-            MinimumQuantity: null,
-            NotifyOnBelowMinimumQuantity: null
+            MinimumQuantity: null
         );
 
         var cancellationToken = new CancellationTokenSource().Token;

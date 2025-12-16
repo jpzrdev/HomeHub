@@ -13,8 +13,7 @@ public class CreateInventoryItemCommandHandler(
         var inventory = new InventoryItem(
             request.Name,
             request.QuantityAvailable,
-            request.MinimumQuantity,
-            request.NotifyOnBelowMinimumQuantity
+            request.MinimumQuantity
         );
 
         await InventoryItemRepository.AddAsync(inventory, cancellationToken);

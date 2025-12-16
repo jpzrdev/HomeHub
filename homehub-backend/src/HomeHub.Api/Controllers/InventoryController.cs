@@ -43,8 +43,7 @@ public class InventoryController(IMediator mediator) : ControllerBase
             id,
             request.Name,
             request.QuantityAvailable,
-            request.MinimumQuantity,
-            request.NotifyOnBelowMinimumQuantity);
+            request.MinimumQuantity);
 
         var result = await mediator.Send(command);
         return Ok(result);

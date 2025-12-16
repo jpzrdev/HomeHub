@@ -33,15 +33,13 @@ public class GenerateShoppingListCommandHandlerTests
         var inventoryItem1 = new InventoryItem(
             name: "Item 1",
             quantityAvailable: 5.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.0m
         );
 
         var inventoryItem2 = new InventoryItem(
             name: "Item 2",
             quantityAvailable: 2.5m,
-            minimumQuantity: 5.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 5.0m
         );
 
         var itemsBelowMinimum = new List<InventoryItem> { inventoryItem1, inventoryItem2 };
@@ -126,8 +124,7 @@ public class GenerateShoppingListCommandHandlerTests
         var inventoryItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 3.75m,
-            minimumQuantity: 10.5m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.5m
         );
 
         var itemsBelowMinimum = new List<InventoryItem> { inventoryItem };
@@ -164,15 +161,13 @@ public class GenerateShoppingListCommandHandlerTests
         var inventoryItemAtMinimum = new InventoryItem(
             name: "Item At Minimum",
             quantityAvailable: 10.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.0m
         );
 
         var inventoryItemAboveMinimum = new InventoryItem(
             name: "Item Above Minimum",
             quantityAvailable: 15.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.0m
         );
 
         // Only items below minimum should be returned
@@ -239,15 +234,13 @@ public class GenerateShoppingListCommandHandlerTests
         var inventoryItem1 = new InventoryItem(
             name: "Item 1",
             quantityAvailable: 5.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 10.0m
         );
 
         var inventoryItem2 = new InventoryItem(
             name: "Item 2",
             quantityAvailable: 2.0m,
-            minimumQuantity: 5.0m,
-            notifyOnBelowMinimumQuantity: true
+            minimumQuantity: 5.0m
         );
 
         var itemsBelowMinimum = new List<InventoryItem> { inventoryItem1, inventoryItem2 };

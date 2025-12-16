@@ -24,8 +24,7 @@ public class CreateInventoryItemCommandHandlerTests
         var command = new CreateInventoryItemCommand(
             Name: "Test Item",
             QuantityAvailable: 100.5m,
-            MinimumQuantity: 10.0m,
-            NotifyOnBelowMinimumQuantity: true
+            MinimumQuantity: 10.0m
         );
 
         InventoryItem? capturedItem = null;
@@ -43,7 +42,6 @@ public class CreateInventoryItemCommandHandlerTests
         Assert.Equal(command.Name, capturedItem.Name);
         Assert.Equal(command.QuantityAvailable, capturedItem.QuantityAvailable);
         Assert.Equal(command.MinimumQuantity, capturedItem.MinimumQuantity);
-        Assert.Equal(command.NotifyOnBelowMinimumQuantity, capturedItem.NotifyOnBelowMinimumQuantity);
         Assert.Equal(result, capturedItem.Id);
 
         _repositoryMock.Verify(r => r.AddAsync(It.IsAny<InventoryItem>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -56,8 +54,7 @@ public class CreateInventoryItemCommandHandlerTests
         var command = new CreateInventoryItemCommand(
             Name: "Another Item",
             QuantityAvailable: 50.0m,
-            MinimumQuantity: 5.0m,
-            NotifyOnBelowMinimumQuantity: false
+            MinimumQuantity: 5.0m
         );
 
         InventoryItem? createdItem = null;
@@ -82,8 +79,7 @@ public class CreateInventoryItemCommandHandlerTests
         var command = new CreateInventoryItemCommand(
             Name: "Test Item",
             QuantityAvailable: 100.0m,
-            MinimumQuantity: 10.0m,
-            NotifyOnBelowMinimumQuantity: true
+            MinimumQuantity: 10.0m
         );
 
         var cancellationToken = new CancellationTokenSource().Token;

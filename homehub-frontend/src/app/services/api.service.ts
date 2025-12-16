@@ -8,7 +8,6 @@ export interface InventoryItem {
   name: string;
   quantityAvailable: number;
   minimumQuantity: number;
-  notifyOnBelowMinimumQuantity: boolean;
   createdAt: string;
   updatedAt?: string;
 }
@@ -46,14 +45,12 @@ export interface CreateInventoryItemRequest {
   name: string;
   quantityAvailable: number;
   minimumQuantity: number;
-  notifyOnBelowMinimumQuantity: boolean;
 }
 
 export interface UpdateInventoryItemRequest {
   name?: string;
   quantityAvailable?: number;
   minimumQuantity?: number;
-  notifyOnBelowMinimumQuantity?: boolean;
 }
 
 @Injectable({

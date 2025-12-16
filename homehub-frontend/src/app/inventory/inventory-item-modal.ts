@@ -7,7 +7,6 @@ export interface InventoryItemFormData {
   name: string;
   quantityAvailable: number;
   minimumQuantity: number;
-  notifyOnBelowMinimumQuantity: boolean;
 }
 
 @Component({
@@ -25,8 +24,7 @@ export class InventoryItemModal implements OnInit, OnChanges {
   formData: InventoryItemFormData = {
     name: '',
     quantityAvailable: 0,
-    minimumQuantity: 0,
-    notifyOnBelowMinimumQuantity: false
+    minimumQuantity: 0
   };
 
   isEditMode = false;
@@ -69,8 +67,7 @@ export class InventoryItemModal implements OnInit, OnChanges {
       this.formData = {
         name: this.item.name,
         quantityAvailable: this.item.quantityAvailable,
-        minimumQuantity: this.item.minimumQuantity,
-        notifyOnBelowMinimumQuantity: this.item.notifyOnBelowMinimumQuantity
+        minimumQuantity: this.item.minimumQuantity
       };
     } else {
       console.log('Initializing form in add mode');
@@ -84,8 +81,7 @@ export class InventoryItemModal implements OnInit, OnChanges {
     this.formData = {
       name: '',
       quantityAvailable: 0,
-      minimumQuantity: 0,
-      notifyOnBelowMinimumQuantity: false
+      minimumQuantity: 0
     };
     this.errors = {};
   }

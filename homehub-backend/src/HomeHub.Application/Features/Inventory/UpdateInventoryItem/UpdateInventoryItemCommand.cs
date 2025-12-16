@@ -7,8 +7,7 @@ public record UpdateInventoryItemCommand(
     Guid Id,
     string? Name,
     decimal? QuantityAvailable,
-    decimal? MinimumQuantity,
-    bool? NotifyOnBelowMinimumQuantity) : IRequest<InventoryItem>
+    decimal? MinimumQuantity) : IRequest<InventoryItem>
 {
 
 }

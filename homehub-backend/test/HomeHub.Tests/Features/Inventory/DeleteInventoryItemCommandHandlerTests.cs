@@ -26,8 +26,7 @@ public class DeleteInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new DeleteInventoryItemCommand(itemId);
@@ -76,8 +75,7 @@ public class DeleteInventoryItemCommandHandlerTests
         var existingItem = new InventoryItem(
             name: "Test Item",
             quantityAvailable: 100.0m,
-            minimumQuantity: 10.0m,
-            notifyOnBelowMinimumQuantity: false
+            minimumQuantity: 10.0m
         );
 
         var command = new DeleteInventoryItemCommand(itemId);
