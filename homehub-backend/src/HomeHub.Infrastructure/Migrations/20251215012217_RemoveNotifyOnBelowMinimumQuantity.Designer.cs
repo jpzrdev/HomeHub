@@ -4,6 +4,7 @@ using HomeHub.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeHub.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeHubContext))]
-    partial class HomeHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251215012217_RemoveNotifyOnBelowMinimumQuantity")]
+    partial class RemoveNotifyOnBelowMinimumQuantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
