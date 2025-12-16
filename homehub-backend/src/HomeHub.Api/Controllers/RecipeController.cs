@@ -1,5 +1,6 @@
 using HomeHub.Api.DTOs;
 using HomeHub.Application.Features.Recipe.CreateRecipe;
+using HomeHub.Application.Features.Recipe.GetAllRecipes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,13 @@ namespace HomeHub.Api.Controllers;
 [Route("api/[controller]")]
 public class RecipeController(IMediator mediator) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetAllRecipesQuery query)
+    {
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRecipeRequest request)
     {
