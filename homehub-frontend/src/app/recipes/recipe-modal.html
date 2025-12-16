@@ -1,12 +1,13 @@
 @if (isOpen) {
 <div
-  class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4 animate-[fadeIn_0.2s_ease] modal-backdrop"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1100] p-4 animate-[fadeIn_0.2s_ease] modal-backdrop"
   (click)="onBackdropClick($event)">
   <div
     class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-[slideUp_0.3s_ease] overflow-hidden"
     (click)="$event.stopPropagation()">
     <div class="flex items-center justify-between p-6 border-b border-gray-200 md:p-4">
-      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">Create New Recipe</h2>
+      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">{{ isEditMode ? 'Edit Recipe' : 'Create New Recipe' }}
+      </h2>
       <button
         class="bg-transparent border-none text-gray-500 cursor-pointer p-2 rounded-md transition-all duration-200 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600"
         (click)="onClose()" aria-label="Close modal">
@@ -177,7 +178,7 @@
       <button type="button"
         class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-gradient-to-br from-orange-400 to-amber-500 text-white shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
         (click)="onSave()">
-        Create Recipe
+        {{ isEditMode ? 'Update Recipe' : 'Create Recipe' }}
       </button>
     </div>
   </div>

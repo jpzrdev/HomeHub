@@ -53,10 +53,27 @@ export interface UpdateInventoryItemRequest {
   minimumQuantity?: number;
 }
 
+export interface RecipeStep {
+  id: string;
+  recipeId: string;
+  order: number;
+  description: string;
+}
+
+export interface RecipeIngredient {
+  id: string;
+  recipeId: string;
+  inventoryItemId: string;
+  inventoryItem?: InventoryItem;
+  quantity: number;
+}
+
 export interface Recipe {
   id: string;
   title: string;
   description: string;
+  steps?: RecipeStep[];
+  ingredients?: RecipeIngredient[];
   createdAt: string;
   updatedAt?: string;
 }
@@ -72,6 +89,13 @@ export interface RecipeIngredientRequest {
 }
 
 export interface CreateRecipeRequest {
+  title: string;
+  description: string;
+  steps: RecipeStepRequest[];
+  ingredients: RecipeIngredientRequest[];
+}
+
+export interface UpdateRecipeRequest {
   title: string;
   description: string;
   steps: RecipeStepRequest[];
@@ -142,5 +166,9 @@ export class ApiService {
 
   createRecipe(recipe: CreateRecipeRequest): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/Recipe`, recipe);
+  }
+
+  updateRecipe(id: string, recipe: UpdateRecipeRequest): Observable<Recipe> {
+    return this.http.put<Recipe>(`${this.apiUrl}/Recipe/${id}`, recipe);
   }
 }

@@ -58,7 +58,8 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       @for (recipe of recipes; track recipe.id) {
       <div
-        class="bg-white rounded-lg overflow-hidden shadow-sm transition-all duration-300 flex flex-col border border-gray-100 hover:-translate-y-1 hover:shadow-md">
+        class="bg-white rounded-lg overflow-hidden shadow-sm transition-all duration-300 flex flex-col border border-gray-100 hover:-translate-y-1 hover:shadow-md cursor-pointer"
+        (click)="openRecipeDetails(recipe)">
         <div class="w-full h-48 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -85,3 +86,9 @@
 </div>
 
 <app-recipe-modal [isOpen]="isModalOpen" (close)="closeModal()" (save)="saveRecipe($event)"></app-recipe-modal>
+
+<app-recipe-details-modal [isOpen]="isDetailsModalOpen" [recipe]="selectedRecipe" (close)="closeDetailsModal()"
+  (edit)="openEditModal($event)"></app-recipe-details-modal>
+
+<app-recipe-modal [isOpen]="isEditModalOpen" [recipe]="recipeToEdit" (close)="closeEditModal()"
+  (save)="updateRecipe($event)"></app-recipe-modal>

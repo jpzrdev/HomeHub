@@ -1,9 +1,10 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ApiService, Recipe as ApiRecipe, CreateRecipeRequest } from '../services/api.service';
+import { ApiService, Recipe as ApiRecipe, CreateRecipeRequest, UpdateRecipeRequest } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
 import { RecipeModal } from './recipe-modal';
+import { RecipeDetailsModal } from './recipe-details-modal';
 
 export interface Recipe {
   id: string;
@@ -15,7 +16,7 @@ export interface Recipe {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, RouterLink, RecipeModal],
+  imports: [CommonModule, RouterLink, RecipeModal, RecipeDetailsModal],
   templateUrl: './recipes.html',
 })
 export class Recipes implements OnInit {
@@ -27,6 +28,11 @@ export class Recipes implements OnInit {
   isLoading = false;
   hasError = false;
   isModalOpen = false;
+  isDetailsModalOpen = false;
+  isEditModalOpen = false;
+  selectedRecipe: ApiRecipe | null = null;
+  recipeToEdit: ApiRecipe | null = null;
+  wasDetailsModalOpen = false;
 
   ngOnInit(): void {
     this.loadRecipes();
@@ -83,18 +89,82 @@ export class Recipes implements OnInit {
 
   closeModal(): void {
     this.isModalOpen = false;
+    this.cdr.detectChanges();
   }
 
   saveRecipe(recipe: CreateRecipeRequest): void {
     this.apiService.createRecipe(recipe).subscribe({
       next: () => {
         this.toastService.success('Recipe created successfully!');
-        this.loadRecipes();
         this.closeModal();
+        this.loadRecipes();
       },
       error: (err) => {
         this.toastService.error('Failed to create recipe. Please try again.');
         console.error('Error creating recipe:', err);
+      }
+    });
+  }
+
+  openRecipeDetails(recipe: Recipe): void {
+    // Convert component Recipe to API Recipe
+    const apiRecipe: ApiRecipe = {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      createdAt: recipe.createdAt.toISOString(),
+      updatedAt: recipe.updatedAt?.toISOString()
+    };
+    this.selectedRecipe = apiRecipe;
+    this.isDetailsModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closeDetailsModal(): void {
+    this.isDetailsModalOpen = false;
+    this.selectedRecipe = null;
+    this.cdr.detectChanges();
+  }
+
+  openEditModal(recipe: ApiRecipe): void {
+    // Remember if details modal was open
+    this.wasDetailsModalOpen = this.isDetailsModalOpen;
+    this.recipeToEdit = recipe;
+    this.isEditModalOpen = true;
+    // Keep details modal open in the background (it will be behind the edit modal)
+    this.cdr.detectChanges();
+  }
+
+  closeEditModal(): void {
+    this.isEditModalOpen = false;
+    this.recipeToEdit = null;
+    // Restore details modal if it was open before
+    if (this.wasDetailsModalOpen) {
+      this.isDetailsModalOpen = true;
+      this.wasDetailsModalOpen = false;
+    }
+    this.cdr.detectChanges();
+  }
+
+  updateRecipe(recipe: UpdateRecipeRequest): void {
+    if (!this.recipeToEdit) {
+      return;
+    }
+
+    this.apiService.updateRecipe(this.recipeToEdit.id, recipe).subscribe({
+      next: (updatedRecipe) => {
+        this.toastService.success('Recipe updated successfully!');
+        this.closeEditModal();
+        this.loadRecipes();
+        // Update the selected recipe and ensure details modal is open
+        this.selectedRecipe = updatedRecipe;
+        this.isDetailsModalOpen = true;
+        this.wasDetailsModalOpen = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.toastService.error('Failed to update recipe. Please try again.');
+        console.error('Error updating recipe:', err);
       }
     });
   }

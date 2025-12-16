@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService, InventoryItem, CreateRecipeRequest, RecipeStepRequest, RecipeIngredientRequest } from '../services/api.service';
+import { ApiService, InventoryItem, CreateRecipeRequest, UpdateRecipeRequest, Recipe } from '../services/api.service';
 
 export interface RecipeFormData {
   title: string;
@@ -18,8 +18,9 @@ export interface RecipeFormData {
 })
 export class RecipeModal implements OnInit, OnChanges {
   @Input() isOpen = false;
+  @Input() recipe: Recipe | null = null;
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<CreateRecipeRequest>();
+  @Output() save = new EventEmitter<CreateRecipeRequest | UpdateRecipeRequest>();
 
   private readonly apiService = inject(ApiService);
 
@@ -33,6 +34,7 @@ export class RecipeModal implements OnInit, OnChanges {
   inventoryItems: InventoryItem[] = [];
   isLoadingInventory = false;
   errors: { [key: string]: string } = {};
+  isEditMode = false;
 
   ngOnInit(): void {
     this.loadInventoryItems();
@@ -43,11 +45,20 @@ export class RecipeModal implements OnInit, OnChanges {
     const isOpening = changes['isOpen']?.currentValue === true &&
       (changes['isOpen']?.previousValue === false || changes['isOpen']?.previousValue === undefined);
 
-    if (isOpening) {
+    const isClosing = changes['isOpen']?.currentValue === false &&
+      changes['isOpen']?.previousValue === true;
+
+    const recipeChanged = changes['recipe']?.currentValue !== changes['recipe']?.previousValue;
+
+    if (isOpening || (recipeChanged && this.isOpen)) {
       this.initializeForm();
       if (this.inventoryItems.length === 0) {
         this.loadInventoryItems();
       }
+    }
+
+    if (isClosing) {
+      this.resetForm();
     }
   }
 
@@ -56,6 +67,49 @@ export class RecipeModal implements OnInit, OnChanges {
       return;
     }
 
+    if (this.recipe) {
+      this.isEditMode = true;
+      // Load full recipe details if needed
+      if (!this.recipe.steps || !this.recipe.ingredients) {
+        this.apiService.getRecipeById(this.recipe.id).subscribe({
+          next: (fullRecipe) => {
+            this.populateFormFromRecipe(fullRecipe);
+          },
+          error: (err) => {
+            console.error('Error loading recipe for edit:', err);
+            this.resetForm();
+          }
+        });
+      } else {
+        this.populateFormFromRecipe(this.recipe);
+      }
+    } else {
+      this.isEditMode = false;
+      this.resetForm();
+    }
+  }
+
+  private populateFormFromRecipe(recipe: Recipe): void {
+    this.formData = {
+      title: recipe.title || '',
+      description: recipe.description || '',
+      steps: recipe.steps
+        ? recipe.steps.map(step => ({
+          order: step.order,
+          description: step.description
+        }))
+        : [],
+      ingredients: recipe.ingredients
+        ? recipe.ingredients.map(ingredient => ({
+          inventoryItemId: ingredient.inventoryItemId,
+          quantity: ingredient.quantity
+        }))
+        : []
+    };
+    this.errors = {};
+  }
+
+  private resetForm(): void {
     this.formData = {
       title: '',
       description: '',
@@ -144,7 +198,7 @@ export class RecipeModal implements OnInit, OnChanges {
       return;
     }
 
-    const request: CreateRecipeRequest = {
+    const request: CreateRecipeRequest | UpdateRecipeRequest = {
       title: this.formData.title.trim(),
       description: this.formData.description.trim(),
       steps: this.formData.steps.map(step => ({
@@ -161,7 +215,7 @@ export class RecipeModal implements OnInit, OnChanges {
   }
 
   onClose(): void {
-    this.initializeForm();
+    this.resetForm();
     this.close.emit();
   }
 
