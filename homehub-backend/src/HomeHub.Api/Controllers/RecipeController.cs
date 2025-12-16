@@ -1,6 +1,7 @@
 using HomeHub.Api.DTOs;
 using HomeHub.Application.Features.Recipe.CreateRecipe;
 using HomeHub.Application.Features.Recipe.GetAllRecipes;
+using HomeHub.Application.Features.Recipe.GetRecipeById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,14 @@ public class RecipeController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] GetAllRecipesQuery query)
     {
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var query = new GetRecipeByIdQuery(id);
         var result = await mediator.Send(query);
         return Ok(result);
     }
