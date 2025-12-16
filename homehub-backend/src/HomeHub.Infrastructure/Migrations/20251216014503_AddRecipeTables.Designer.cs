@@ -4,6 +4,7 @@ using HomeHub.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeHub.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeHubContext))]
-    partial class HomeHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251216014503_AddRecipeTables")]
+    partial class AddRecipeTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace HomeHub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InventoryItems", (string)null);
+                    b.ToTable("InventoryItems");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.Recipe", b =>
@@ -76,7 +79,7 @@ namespace HomeHub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.RecipeIngredient", b =>
@@ -108,7 +111,7 @@ namespace HomeHub.Infrastructure.Migrations
                     b.HasIndex("RecipeId", "InventoryItemId")
                         .IsUnique();
 
-                    b.ToTable("RecipeIngredients", (string)null);
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.RecipeStep", b =>
@@ -139,7 +142,7 @@ namespace HomeHub.Infrastructure.Migrations
                     b.HasIndex("RecipeId", "Order")
                         .IsUnique();
 
-                    b.ToTable("RecipeSteps", (string)null);
+                    b.ToTable("RecipeSteps");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.ShoppingList", b =>
@@ -159,7 +162,7 @@ namespace HomeHub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShoppingLists", (string)null);
+                    b.ToTable("ShoppingLists");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.ShoppingListItem", b =>
@@ -193,7 +196,7 @@ namespace HomeHub.Infrastructure.Migrations
 
                     b.HasIndex("ShoppingListId");
 
-                    b.ToTable("ShoppingListItems", (string)null);
+                    b.ToTable("ShoppingListItems");
                 });
 
             modelBuilder.Entity("HomeHub.Domain.Entities.RecipeIngredient", b =>

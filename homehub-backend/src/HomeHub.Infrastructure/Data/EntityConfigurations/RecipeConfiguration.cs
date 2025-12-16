@@ -15,6 +15,7 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .HasMaxLength(200);
 
         builder.Property(r => r.Description)
+            .IsRequired()
             .HasMaxLength(2000);
 
         builder.HasMany(r => r.Steps)
