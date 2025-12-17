@@ -12,16 +12,29 @@
         Back
       </button>
       <h1 class="flex-1 text-3xl md:text-2xl font-bold text-gray-900 m-0">Recipes</h1>
-      <button
-        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-orange-400 to-amber-500 border-none rounded-lg text-white text-base font-semibold cursor-pointer transition-all duration-200 shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
-        aria-label="Add new recipe" (click)="openAddRecipe()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"></path>
-          <path d="M12 5v14"></path>
-        </svg>
-        Add New Recipe
-      </button>
+      <div class="flex gap-3 flex-wrap">
+        <button
+          class="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-purple-500 to-pink-600 border-none rounded-lg text-white text-base font-semibold cursor-pointer transition-all duration-200 shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-500/40"
+          aria-label="Generate recipes from AI" (click)="openGenerateRecipesModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          Generate from AI
+        </button>
+        <button
+          class="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-orange-400 to-amber-500 border-none rounded-lg text-white text-base font-semibold cursor-pointer transition-all duration-200 shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
+          aria-label="Add new recipe" (click)="openAddRecipe()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+          </svg>
+          Add New Recipe
+        </button>
+      </div>
     </div>
   </header>
 
@@ -92,3 +105,6 @@
 
 <app-recipe-modal [isOpen]="isEditModalOpen" [recipe]="recipeToEdit" (close)="closeEditModal()"
   (save)="updateRecipe($event)"></app-recipe-modal>
+
+<app-generate-recipes-modal [isOpen]="isGenerateRecipesModalOpen" [isGenerating]="isGeneratingRecipes"
+  (close)="closeGenerateRecipesModal()" (generate)="generateRecipesFromInventory($event)"></app-generate-recipes-modal>

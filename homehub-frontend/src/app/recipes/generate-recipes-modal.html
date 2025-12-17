@@ -1,0 +1,80 @@
+@if (isOpen) {
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4 animate-[fadeIn_0.2s_ease]"
+  (click)="onBackdropClick($event)">
+  <div
+    class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col animate-[slideUp_0.3s_ease] overflow-hidden"
+    (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 md:p-4">
+      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">Generate Recipes from AI</h2>
+      <button
+        class="bg-transparent border-none text-gray-500 cursor-pointer p-2 rounded-md transition-all duration-200 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600"
+        (click)="onClose()" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto flex-1 md:p-4">
+      <form (ngSubmit)="onGenerate()" #form="ngForm">
+        <div class="mb-6 last:mb-0">
+          <label for="userDescription" class="block mb-2 font-semibold text-gray-600 text-sm">Additional Information
+            <span class="text-gray-400 text-xs font-normal">(optional)</span></label>
+          <textarea id="userDescription" name="userDescription" [(ngModel)]="formData.userDescription" rows="4"
+            class="w-full px-3 py-3 border border-gray-200 rounded-lg text-base bg-white text-gray-900 transition-all duration-200 box-border placeholder:text-gray-400 focus:outline-none focus:border-orange-500 focus:ring-3 focus:ring-orange-500/10 resize-none"
+            placeholder="E.g., vegetarian recipes, quick meals, Italian cuisine..."></textarea>
+        </div>
+
+        <div class="mb-6 last:mb-0">
+          <label class="block mb-2 font-semibold text-gray-600 text-sm">Select Inventory Items <span
+              class="text-red-600">*</span></label>
+          @if (isLoadingInventory) {
+          <div class="flex items-center justify-center py-8">
+            <div class="w-8 h-8 border-4 border-gray-200 border-t-orange-500 rounded-full animate-spin"></div>
+          </div>
+          } @else if (inventoryItems.length === 0) {
+          <p class="text-gray-500 text-sm py-4">No inventory items available. Please add items to your inventory first.
+          </p>
+          } @else {
+          <div class="border border-gray-200 rounded-lg max-h-64 overflow-y-auto">
+            <div class="p-2">
+              @for (item of inventoryItems; track item.id) {
+              <label
+                class="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-50 border border-transparent hover:border-gray-200"
+                [class.bg-orange-50]="isItemSelected(item.id)" [class.border-orange-300]="isItemSelected(item.id)">
+                <input type="checkbox" [checked]="isItemSelected(item.id)" (change)="toggleInventoryItem(item.id)"
+                  class="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer">
+                <div class="flex-1">
+                  <span class="font-medium text-gray-900">{{ item.name }}</span>
+                  <span class="text-sm text-gray-500 ml-2">(Available: {{ item.quantityAvailable }})</span>
+                </div>
+              </label>
+              }
+            </div>
+          </div>
+          }
+          @if (errors['inventoryItemIds']) {
+          <span class="block mt-2 text-red-600 text-sm">{{ errors['inventoryItemIds'] }}</span>
+          }
+        </div>
+      </form>
+    </div>
+
+    <div class="flex justify-end gap-4 p-6 border-t border-gray-200 md:p-4">
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="onClose()" [disabled]="isGenerating">Cancel</button>
+      <button type="button"
+        class="px-6 py-3 border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 bg-gradient-to-br from-orange-400 to-amber-500 text-white shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        (click)="onGenerate()" [disabled]="isLoadingInventory || inventoryItems.length === 0 || isGenerating">
+        @if (isGenerating) {
+        <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        }
+        {{ isGenerating ? 'Generating...' : 'Generate Recipes' }}
+      </button>
+    </div>
+  </div>
+</div>
+}

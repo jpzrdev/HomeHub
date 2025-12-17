@@ -1,10 +1,11 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ApiService, Recipe as ApiRecipe, CreateRecipeRequest, UpdateRecipeRequest } from '../services/api.service';
+import { ApiService, Recipe as ApiRecipe, CreateRecipeRequest, UpdateRecipeRequest, GeneratedRecipeResponse } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
 import { RecipeModal } from './recipe-modal';
 import { RecipeDetailsModal } from './recipe-details-modal';
+import { GenerateRecipesModal, GenerateRecipesFormData } from './generate-recipes-modal';
 
 export interface Recipe {
   id: string;
@@ -16,7 +17,7 @@ export interface Recipe {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, RouterLink, RecipeModal, RecipeDetailsModal],
+  imports: [CommonModule, RouterLink, RecipeModal, RecipeDetailsModal, GenerateRecipesModal],
   templateUrl: './recipes.html',
 })
 export class Recipes implements OnInit {
@@ -30,6 +31,8 @@ export class Recipes implements OnInit {
   isModalOpen = false;
   isDetailsModalOpen = false;
   isEditModalOpen = false;
+  isGenerateRecipesModalOpen = false;
+  isGeneratingRecipes = false;
   selectedRecipe: ApiRecipe | null = null;
   recipeToEdit: ApiRecipe | null = null;
   wasDetailsModalOpen = false;
@@ -165,6 +168,45 @@ export class Recipes implements OnInit {
       error: (err) => {
         this.toastService.error('Failed to update recipe. Please try again.');
         console.error('Error updating recipe:', err);
+      }
+    });
+  }
+
+  openGenerateRecipesModal(): void {
+    this.isGenerateRecipesModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  closeGenerateRecipesModal(): void {
+    this.isGenerateRecipesModalOpen = false;
+    this.cdr.detectChanges();
+  }
+
+  generateRecipesFromInventory(formData: GenerateRecipesFormData): void {
+    this.isGeneratingRecipes = true;
+    this.cdr.detectChanges();
+
+    this.apiService.generateRecipesFromInventory({
+      inventoryItemIds: formData.inventoryItemIds,
+      userDescription: formData.userDescription || undefined
+    }).subscribe({
+      next: (generatedRecipes: GeneratedRecipeResponse[]) => {
+        this.isGeneratingRecipes = false;
+        this.closeGenerateRecipesModal();
+
+        if (generatedRecipes && generatedRecipes.length > 0) {
+          this.toastService.success(`Successfully generated ${generatedRecipes.length} recipe(s)!`);
+          this.loadRecipes();
+        } else {
+          this.toastService.info('No recipes were generated. Try selecting different items or adding more information.');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isGeneratingRecipes = false;
+        this.toastService.error('Failed to generate recipes. Please try again.');
+        console.error('Error generating recipes:', err);
+        this.cdr.detectChanges();
       }
     });
   }

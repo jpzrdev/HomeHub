@@ -102,6 +102,29 @@ export interface UpdateRecipeRequest {
   ingredients: RecipeIngredientRequest[];
 }
 
+export interface GeneratedRecipeStepResponse {
+  order: number;
+  description: string;
+}
+
+export interface GeneratedRecipeIngredientResponse {
+  inventoryItemId: string;
+  inventoryItemName: string;
+  quantity: number;
+}
+
+export interface GeneratedRecipeResponse {
+  title: string;
+  description: string;
+  steps: GeneratedRecipeStepResponse[];
+  ingredients: GeneratedRecipeIngredientResponse[];
+}
+
+export interface GenerateRecipesFromInventoryRequest {
+  inventoryItemIds: string[];
+  userDescription?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -170,5 +193,9 @@ export class ApiService {
 
   updateRecipe(id: string, recipe: UpdateRecipeRequest): Observable<Recipe> {
     return this.http.put<Recipe>(`${this.apiUrl}/Recipe/${id}`, recipe);
+  }
+
+  generateRecipesFromInventory(request: GenerateRecipesFromInventoryRequest): Observable<GeneratedRecipeResponse[]> {
+    return this.http.post<GeneratedRecipeResponse[]>(`${this.apiUrl}/Recipe/generate-from-inventory`, request);
   }
 }
