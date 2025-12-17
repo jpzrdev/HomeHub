@@ -1,0 +1,27 @@
+Generate exactly 3 different recipes using the following ingredients: {0}.
+
+{1}
+
+Return the recipes in the following JSON format:
+{{
+  ""recipes"": [
+    {{
+      ""title"": ""Recipe Title"",
+      ""description"": ""Recipe description"",
+      ""steps"": [
+        {{ ""order"": 1, ""description"": ""Step description"" }},
+        {{ ""order"": 2, ""description"": ""Step description"" }}
+      ],
+      ""ingredients"": [
+        {{ ""inventoryItemName"": ""Ingredient Name"", ""quantity"": 1.5 }}
+      ]
+    }}
+  ]
+}}
+
+Important:
+- Return exactly 3 recipes
+- Each recipe must use at least some of the provided ingredients
+- Steps must be numbered starting from 1
+- Quantities should be reasonable decimal values
+- Ingredient names must match the provided inventory item names (case-insensitive matching is acceptable)

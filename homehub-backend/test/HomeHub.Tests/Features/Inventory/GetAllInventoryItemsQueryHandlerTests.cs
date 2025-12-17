@@ -25,9 +25,9 @@ public class GetAllInventoryItemsQueryHandlerTests
         // Arrange
         var items = new List<InventoryItem>
         {
-            new InventoryItem("Item 1", 100.0m, 10.0m, false),
-            new InventoryItem("Item 2", 200.0m, 20.0m, true),
-            new InventoryItem("Item 3", 300.0m, 30.0m, false)
+            new InventoryItem("Item 1", 100.0m, 10.0m),
+            new InventoryItem("Item 2", 200.0m, 20.0m),
+            new InventoryItem("Item 3", 300.0m, 30.0m)
         };
 
         var paginationResult = new PaginationResult<InventoryItem>(
@@ -102,8 +102,8 @@ public class GetAllInventoryItemsQueryHandlerTests
         // Arrange
         var items = new List<InventoryItem>
         {
-            new InventoryItem("Item 1", 100.0m, 10.0m, false),
-            new InventoryItem("Item 2", 200.0m, 20.0m, true)
+            new InventoryItem("Item 1", 100.0m, 10.0m),
+            new InventoryItem("Item 2", 200.0m, 20.0m)
         };
 
         var paginationResult = new PaginationResult<InventoryItem>(

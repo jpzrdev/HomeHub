@@ -1,5 +1,6 @@
 using HomeHub.Api.DTOs;
 using HomeHub.Application.Features.Recipe.CreateRecipe;
+using HomeHub.Application.Features.Recipe.GenerateRecipesFromInventory;
 using HomeHub.Application.Features.Recipe.GetAllRecipes;
 using HomeHub.Application.Features.Recipe.GetRecipeById;
 using MediatR;
@@ -38,6 +39,18 @@ public class RecipeController(IMediator mediator) : ControllerBase
 
         var id = await mediator.Send(command);
         return CreatedAtAction(nameof(Create), new { id }, id);
+    }
+
+    [HttpPost("generate-from-inventory")]
+    public async Task<IActionResult> GenerateFromInventory([FromBody] GenerateRecipesFromInventoryRequest request)
+    {
+        var command = new GenerateRecipesFromInventoryCommand(
+            request.InventoryItemIds,
+            request.UserDescription
+        );
+
+        var recipes = await mediator.Send(command);
+        return Ok(recipes);
     }
 }
 
