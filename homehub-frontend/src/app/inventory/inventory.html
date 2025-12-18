@@ -125,3 +125,7 @@
 
 <app-inventory-item-modal [isOpen]="isModalOpen" [item]="selectedItem" (close)="closeModal()" (save)="saveItem($event)">
 </app-inventory-item-modal>
+
+<app-delete-inventory-item-modal [isOpen]="isDeleteModalOpen" [itemName]="itemToDelete?.name || ''"
+  (close)="closeDeleteModal()" (confirm)="confirmDelete()">
+</app-delete-inventory-item-modal>

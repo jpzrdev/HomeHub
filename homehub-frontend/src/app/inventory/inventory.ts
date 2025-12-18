@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService, InventoryItem as ApiInventoryItem } from '../services/api.service';
 import { InventoryItemModal, InventoryItemFormData } from './inventory-item-modal';
+import { DeleteInventoryItemModal } from './delete-inventory-item-modal';
 import { ToastService } from '../services/toast.service';
 
 export interface InventoryItem {
@@ -16,7 +17,7 @@ export interface InventoryItem {
 
 @Component({
   selector: 'app-inventory',
-  imports: [CommonModule, RouterLink, InventoryItemModal],
+  imports: [CommonModule, RouterLink, InventoryItemModal, DeleteInventoryItemModal],
   templateUrl: './inventory.html',
 })
 export class Inventory implements OnInit {
@@ -29,6 +30,8 @@ export class Inventory implements OnInit {
   hasError = false;
   isModalOpen = false;
   selectedItem: InventoryItem | null = null;
+  isDeleteModalOpen = false;
+  itemToDelete: InventoryItem | null = null;
 
   ngOnInit(): void {
     this.loadInventoryItems();
@@ -93,19 +96,38 @@ export class Inventory implements OnInit {
   }
 
   deleteItem(id: string): void {
-    if (!confirm('Are you sure you want to delete this item?')) {
+    const item = this.inventoryItems.find(i => i.id === id);
+    if (!item) {
       return;
     }
 
+    this.itemToDelete = item;
+    this.isDeleteModalOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  confirmDelete(): void {
+    if (!this.itemToDelete) {
+      return;
+    }
+
+    const id = this.itemToDelete.id;
     this.apiService.deleteInventoryItem(id).subscribe({
       next: () => {
         this.inventoryItems = this.inventoryItems.filter(item => item.id !== id);
+        this.closeDeleteModal();
+        this.toastService.success('Inventory item deleted successfully.');
       },
       error: (err) => {
         this.toastService.error('Failed to delete item. Please try again.');
         console.error('Error deleting inventory item:', err);
       }
     });
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.itemToDelete = null;
   }
 
   openAddModal(): void {
