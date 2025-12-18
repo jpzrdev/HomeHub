@@ -2,6 +2,7 @@ using HomeHub.Application.Features.Inventory.Interfaces;
 using HomeHub.Application.Features.Recipe.GenerateRecipesFromInventory;
 using HomeHub.Application.Features.Recipe.Interfaces;
 using HomeHub.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
@@ -11,15 +12,24 @@ public class GenerateRecipesFromInventoryCommandHandlerTests
 {
     private readonly Mock<IAiRecipeService> _aiRecipeServiceMock;
     private readonly Mock<IInventoryItemRepository> _inventoryItemRepositoryMock;
+    private readonly Mock<IConfiguration> _configurationMock;
     private readonly GenerateRecipesFromInventoryCommandHandler _handler;
 
     public GenerateRecipesFromInventoryCommandHandlerTests()
     {
         _aiRecipeServiceMock = new Mock<IAiRecipeService>();
         _inventoryItemRepositoryMock = new Mock<IInventoryItemRepository>();
+        _configurationMock = new Mock<IConfiguration>();
+
+        // Setup configuration to return an API key by default (for tests that use AI service)
+        var configurationSectionMock = new Mock<IConfigurationSection>();
+        configurationSectionMock.Setup(s => s.Value).Returns("test-api-key");
+        _configurationMock.Setup(c => c["OpenAI:ApiKey"]).Returns("test-api-key");
+
         _handler = new GenerateRecipesFromInventoryCommandHandler(
             _aiRecipeServiceMock.Object,
-            _inventoryItemRepositoryMock.Object
+            _inventoryItemRepositoryMock.Object,
+            _configurationMock.Object
         );
     }
 

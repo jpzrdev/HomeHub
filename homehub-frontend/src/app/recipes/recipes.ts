@@ -6,6 +6,7 @@ import { ToastService } from '../services/toast.service';
 import { RecipeModal } from './recipe-modal';
 import { RecipeDetailsModal } from './recipe-details-modal';
 import { GenerateRecipesModal, GenerateRecipesFormData } from './generate-recipes-modal';
+import { GeneratedRecipesModal } from './generated-recipes-modal';
 
 export interface Recipe {
   id: string;
@@ -17,7 +18,7 @@ export interface Recipe {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, RouterLink, RecipeModal, RecipeDetailsModal, GenerateRecipesModal],
+  imports: [CommonModule, RouterLink, RecipeModal, RecipeDetailsModal, GenerateRecipesModal, GeneratedRecipesModal],
   templateUrl: './recipes.html',
 })
 export class Recipes implements OnInit {
@@ -32,9 +33,11 @@ export class Recipes implements OnInit {
   isDetailsModalOpen = false;
   isEditModalOpen = false;
   isGenerateRecipesModalOpen = false;
+  isGeneratedRecipesModalOpen = false;
   isGeneratingRecipes = false;
   selectedRecipe: ApiRecipe | null = null;
   recipeToEdit: ApiRecipe | null = null;
+  generatedRecipes: GeneratedRecipeResponse[] = [];
   wasDetailsModalOpen = false;
 
   ngOnInit(): void {
@@ -195,8 +198,9 @@ export class Recipes implements OnInit {
         this.closeGenerateRecipesModal();
 
         if (generatedRecipes && generatedRecipes.length > 0) {
+          this.generatedRecipes = generatedRecipes;
+          this.isGeneratedRecipesModalOpen = true;
           this.toastService.success(`Successfully generated ${generatedRecipes.length} recipe(s)!`);
-          this.loadRecipes();
         } else {
           this.toastService.info('No recipes were generated. Try selecting different items or adding more information.');
         }
@@ -207,6 +211,46 @@ export class Recipes implements OnInit {
         this.toastService.error('Failed to generate recipes. Please try again.');
         console.error('Error generating recipes:', err);
         this.cdr.detectChanges();
+      }
+    });
+  }
+
+  closeGeneratedRecipesModal(): void {
+    this.isGeneratedRecipesModalOpen = false;
+    this.generatedRecipes = [];
+    this.loadRecipes();
+    this.cdr.detectChanges();
+  }
+
+  saveGeneratedRecipe(generatedRecipe: GeneratedRecipeResponse): void {
+    const createRequest: CreateRecipeRequest = {
+      title: generatedRecipe.title,
+      description: generatedRecipe.description,
+      steps: generatedRecipe.steps.map(step => ({
+        order: step.order,
+        description: step.description
+      })),
+      ingredients: generatedRecipe.ingredients.map(ingredient => ({
+        inventoryItemId: ingredient.inventoryItemId,
+        quantity: ingredient.quantity
+      }))
+    };
+
+    this.apiService.createRecipe(createRequest).subscribe({
+      next: () => {
+        this.toastService.success('Recipe saved successfully!');
+        // Remove the saved recipe from the generated recipes list
+        this.generatedRecipes = this.generatedRecipes.filter(r => r !== generatedRecipe);
+        if (this.generatedRecipes.length === 0) {
+          this.closeGeneratedRecipesModal();
+        } else {
+          this.cdr.detectChanges();
+        }
+        this.loadRecipes();
+      },
+      error: (err) => {
+        this.toastService.error('Failed to save recipe. Please try again.');
+        console.error('Error saving recipe:', err);
       }
     });
   }

@@ -1,0 +1,85 @@
+@if (isOpen && recipes.length > 0) {
+<div
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4 animate-[fadeIn_0.2s_ease] modal-backdrop overflow-y-auto"
+  (click)="onBackdropClick($event)">
+  <div
+    class="bg-white rounded-xl shadow-2xl w-full max-w-7xl max-h-[95vh] flex flex-col animate-[slideUp_0.3s_ease] overflow-hidden my-8"
+    (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200 md:p-4 flex-shrink-0">
+      <h2 class="m-0 text-2xl md:text-xl font-bold text-gray-900">Generated Recipes</h2>
+      <button
+        class="bg-transparent border-none text-gray-500 cursor-pointer p-2 rounded-md transition-all duration-200 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600"
+        (click)="onClose()" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18"></path>
+          <path d="M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Content - Responsive Grid -->
+    <div class="overflow-y-auto flex-1 p-6 md:p-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        @for (recipe of recipes; track recipe.title) {
+        <div class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+          <!-- Recipe Header -->
+          <div class="p-4 border-b border-gray-200 bg-white">
+            <h3 class="text-xl font-bold text-gray-900 m-0 mb-2">{{ recipe.title }}</h3>
+            @if (recipe.description) {
+            <p class="text-sm text-gray-600 m-0 line-clamp-2">{{ recipe.description }}</p>
+            }
+          </div>
+
+          <!-- Recipe Content -->
+          <div class="p-4 flex-1 overflow-y-auto max-h-[60vh]">
+            <!-- Steps Section -->
+            @if (recipe.steps && recipe.steps.length > 0) {
+            <div class="mb-4">
+              <h4 class="text-lg font-semibold text-gray-900 m-0 mb-3">Steps</h4>
+              <div class="space-y-3">
+                @for (step of getSortedSteps(recipe.steps); track step.order) {
+                <div class="flex gap-3">
+                  <span
+                    class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">
+                    {{ step.order }}
+                  </span>
+                  <p class="text-sm text-gray-700 m-0 leading-relaxed flex-1">{{ step.description }}</p>
+                </div>
+                }
+              </div>
+            </div>
+            }
+
+            <!-- Ingredients Section -->
+            @if (recipe.ingredients && recipe.ingredients.length > 0) {
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 m-0 mb-3">Ingredients</h4>
+              <div class="space-y-2">
+                @for (ingredient of recipe.ingredients; track ingredient.inventoryItemId) {
+                <div class="flex items-center justify-between p-2 bg-white rounded border border-gray-200">
+                  <span class="text-sm text-gray-900 font-medium">{{ ingredient.inventoryItemName }}</span>
+                  <span class="text-sm text-gray-600 font-semibold font-mono">{{ ingredient.quantity }}</span>
+                </div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- Save Button -->
+          <div class="p-4 border-t border-gray-200 bg-white">
+            <button
+              class="w-full px-4 py-2 bg-gradient-to-br from-orange-400 to-amber-500 border-none rounded-lg text-white text-sm font-semibold cursor-pointer transition-all duration-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md"
+              (click)="onSaveRecipe(recipe)" aria-label="Save recipe">
+              Save Recipe
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}

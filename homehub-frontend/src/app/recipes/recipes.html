@@ -108,3 +108,6 @@
 
 <app-generate-recipes-modal [isOpen]="isGenerateRecipesModalOpen" [isGenerating]="isGeneratingRecipes"
   (close)="closeGenerateRecipesModal()" (generate)="generateRecipesFromInventory($event)"></app-generate-recipes-modal>
+
+<app-generated-recipes-modal [isOpen]="isGeneratedRecipesModalOpen" [recipes]="generatedRecipes"
+  (close)="closeGeneratedRecipesModal()" (saveRecipe)="saveGeneratedRecipe($event)"></app-generated-recipes-modal>

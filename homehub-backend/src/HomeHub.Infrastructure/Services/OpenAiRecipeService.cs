@@ -11,7 +11,7 @@ public class OpenAiRecipeService : IAiRecipeService
     private readonly IConfiguration _configuration;
     private readonly ILogger<OpenAiRecipeService> _logger;
     private readonly IPromptService _promptService;
-    private readonly ChatClient _chatClient;
+    private readonly ChatClient? _chatClient;
 
     public OpenAiRecipeService(
         IConfiguration configuration,
@@ -23,12 +23,10 @@ public class OpenAiRecipeService : IAiRecipeService
         _promptService = promptService;
 
         var apiKey = _configuration["OpenAI:ApiKey"];
-        if (string.IsNullOrWhiteSpace(apiKey))
+        if (!string.IsNullOrWhiteSpace(apiKey))
         {
-            throw new InvalidOperationException("OpenAI API key is not configured. Please set 'OpenAI:ApiKey' in appsettings.json");
+            _chatClient = new ChatClient(model: "gpt-4o-mini", apiKey: apiKey);
         }
-
-        _chatClient = new ChatClient(model: "gpt-4o-mini", apiKey: apiKey);
     }
 
     public async Task<List<GeneratedRecipe>> GenerateRecipesAsync(
@@ -40,6 +38,11 @@ public class OpenAiRecipeService : IAiRecipeService
         if (inventoryItemNames == null || inventoryItemNames.Count == 0)
         {
             throw new ArgumentException("At least one inventory item name must be provided.", nameof(inventoryItemNames));
+        }
+
+        if (_chatClient == null)
+        {
+            throw new InvalidOperationException("OpenAI API key is not configured. Please set 'OpenAI:ApiKey' in appsettings.json");
         }
 
         var promptTemplate = await _promptService.GetPromptAsync(promptId, cancellationToken);
