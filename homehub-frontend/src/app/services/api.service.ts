@@ -29,6 +29,7 @@ export interface ShoppingListItem {
   inventoryItem: InventoryItem;
   quantityToBuy: number;
   isPurchased: boolean;
+  isActive: boolean;
   createdAt: string;
   updatedAt?: string;
 }
@@ -66,6 +67,7 @@ export interface RecipeIngredient {
   inventoryItemId: string;
   inventoryItem?: InventoryItem;
   quantity: number;
+  isActive: boolean;
 }
 
 export interface Recipe {

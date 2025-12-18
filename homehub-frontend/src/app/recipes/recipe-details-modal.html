@@ -103,9 +103,31 @@
           <h3 class="text-xl font-bold text-gray-900 m-0 mb-4">Ingredients</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             @for (ingredient of fullRecipe.ingredients; track ingredient.id) {
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span class="text-base text-gray-900 font-medium">{{ getIngredientName(ingredient) }}</span>
-              <span class="text-base text-gray-600 font-semibold font-mono">{{ ingredient.quantity }}</span>
+            <div class="flex items-center justify-between p-3 rounded-lg border"
+              [class.bg-gray-50]="ingredient.isActive" [class.bg-gray-100]="!ingredient.isActive"
+              [class.border-gray-200]="ingredient.isActive" [class.border-gray-300]="!ingredient.isActive"
+              [class.opacity-75]="!ingredient.isActive">
+              <div class="flex items-center gap-2 flex-1">
+                @if (!ingredient.isActive) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="text-gray-400 flex-shrink-0">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                </svg>
+                }
+                <span class="text-base font-medium" [class.text-gray-900]="ingredient.isActive"
+                  [class.text-gray-500]="!ingredient.isActive" [class.line-through]="!ingredient.isActive">{{
+                  getIngredientName(ingredient) }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                @if (!ingredient.isActive) {
+                <span
+                  class="px-2 py-0.5 bg-gray-200 text-gray-600 text-xs font-semibold rounded uppercase">Inactive</span>
+                }
+                <span class="text-base font-semibold font-mono" [class.text-gray-600]="ingredient.isActive"
+                  [class.text-gray-400]="!ingredient.isActive">{{ ingredient.quantity }}</span>
+              </div>
             </div>
             }
           </div>

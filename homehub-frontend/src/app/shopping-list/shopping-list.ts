@@ -10,6 +10,7 @@ export interface ShoppingListItem {
   inventoryItemName: string;
   quantityToBuy: number;
   isPurchased: boolean;
+  isActive: boolean;
 }
 
 export interface ShoppingListData {
@@ -85,6 +86,7 @@ export class ShoppingList implements OnInit {
       inventoryItemName: apiItem.inventoryItem?.name || 'Unknown Item',
       quantityToBuy: apiItem.quantityToBuy,
       isPurchased: apiItem.isPurchased,
+      isActive: apiItem.isActive,
     };
   }
 

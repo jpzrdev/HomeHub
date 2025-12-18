@@ -88,12 +88,19 @@
         } @else {
         @for (item of list.items.slice(0, 3); track item.id) {
         <div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-b-0"
-          [class.opacity-60]="item.isPurchased">
-          <span class="flex items-center text-indigo-500 flex-shrink-0" [class.text-green-500]="item.isPurchased">
-            @if (item.isPurchased) {
+          [class.opacity-60]="item.isPurchased || !item.isActive">
+          <span class="flex items-center flex-shrink-0" [class.text-green-500]="item.isPurchased && item.isActive"
+            [class.text-indigo-500]="!item.isPurchased && item.isActive" [class.text-gray-400]="!item.isActive">
+            @if (item.isPurchased && item.isActive) {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            } @else if (!item.isActive) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
             </svg>
             } @else {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -102,9 +109,14 @@
             </svg>
             }
           </span>
-          <span class="flex-1 text-sm text-gray-800 font-medium" [class.line-through]="item.isPurchased">{{
+          <span class="flex-1 text-sm font-medium" [class.text-gray-800]="item.isActive"
+            [class.text-gray-400]="!item.isActive" [class.line-through]="item.isPurchased || !item.isActive">{{
             item.inventoryItemName }}</span>
+          @if (!item.isActive) {
+          <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs font-semibold rounded uppercase">Inactive</span>
+          } @else {
           <span class="text-sm text-gray-500 font-semibold font-mono">{{ item.quantityToBuy }}</span>
+          }
         </div>
         }
         @if (list.items.length > 3) {
