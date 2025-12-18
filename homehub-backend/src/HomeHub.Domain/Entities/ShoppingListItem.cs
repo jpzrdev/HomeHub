@@ -15,6 +15,7 @@ public class ShoppingListItem : BaseEntity
     public InventoryItem InventoryItem { get; private set; } = null!;
     public decimal QuantityToBuy { get; private set; }
     public bool IsPurchased { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     private ShoppingListItem()
     {
@@ -30,6 +31,7 @@ public class ShoppingListItem : BaseEntity
         InventoryItemId = inventoryItemId;
         QuantityToBuy = quantityToBuy;
         IsPurchased = false;
+        IsActive = true;
     }
 
     public void MarkAsPurchased()
@@ -48,5 +50,10 @@ public class ShoppingListItem : BaseEntity
             throw new ArgumentException("Quantity to buy must be greater than zero.", nameof(quantityToBuy));
 
         QuantityToBuy = quantityToBuy;
+    }
+
+    public void MarkAsInactive()
+    {
+        IsActive = false;
     }
 }

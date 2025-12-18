@@ -7,12 +7,14 @@ public class InventoryItem : BaseEntity
     public string Name { get; private set; } = string.Empty;
     public decimal QuantityAvailable { get; private set; }
     public decimal MinimumQuantity { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     public InventoryItem(string name, decimal quantityAvailable, decimal minimumQuantity)
     {
         Name = name;
         QuantityAvailable = quantityAvailable;
         MinimumQuantity = minimumQuantity;
+        IsActive = true;
     }
 
     public void Update(string? name, decimal? quantityAvailable, decimal? minimumQuantity)
@@ -20,5 +22,10 @@ public class InventoryItem : BaseEntity
         Name = name ?? Name;
         QuantityAvailable = quantityAvailable ?? QuantityAvailable;
         MinimumQuantity = minimumQuantity ?? MinimumQuantity;
+    }
+
+    public void MarkAsInactive()
+    {
+        IsActive = false;
     }
 }

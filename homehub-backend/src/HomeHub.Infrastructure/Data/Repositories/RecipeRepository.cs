@@ -11,7 +11,7 @@ public class RecipeRepository(HomeHubContext context) : RepositoryBase<RecipeEnt
     {
         return await _context.Set<RecipeEntity>()
             .Include(r => r.Steps)
-            .Include(r => r.Ingredients)
+            .Include(r => r.Ingredients.Where(i => i.IsActive))
                 .ThenInclude(i => i.InventoryItem)
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }

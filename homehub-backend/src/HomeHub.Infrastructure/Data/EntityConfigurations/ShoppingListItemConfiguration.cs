@@ -26,5 +26,8 @@ public class ShoppingListItemConfiguration : IEntityTypeConfiguration<ShoppingLi
 
         builder.Property(sli => sli.IsPurchased)
             .IsRequired();
+
+        builder.Property(sli => sli.IsActive)
+            .IsRequired();
     }
 }

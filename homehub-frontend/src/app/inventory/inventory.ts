@@ -116,7 +116,7 @@ export class Inventory implements OnInit {
       next: () => {
         this.inventoryItems = this.inventoryItems.filter(item => item.id !== id);
         this.closeDeleteModal();
-        this.toastService.success('Inventory item deleted successfully.');
+        this.toastService.success('Inventory item deactivated successfully.');
       },
       error: (err) => {
         this.toastService.error('Failed to delete item. Please try again.');

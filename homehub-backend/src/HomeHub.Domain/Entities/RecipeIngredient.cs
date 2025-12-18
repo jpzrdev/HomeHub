@@ -14,6 +14,7 @@ public class RecipeIngredient : BaseEntity
 
     public InventoryItem InventoryItem { get; private set; } = null!;
     public decimal Quantity { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     private RecipeIngredient()
     {
@@ -28,6 +29,7 @@ public class RecipeIngredient : BaseEntity
         RecipeId = recipeId;
         InventoryItemId = inventoryItemId;
         Quantity = quantity;
+        IsActive = true;
     }
 
     public void UpdateQuantity(decimal quantity)
@@ -36,6 +38,11 @@ public class RecipeIngredient : BaseEntity
             throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
 
         Quantity = quantity;
+    }
+
+    public void MarkAsInactive()
+    {
+        IsActive = false;
     }
 }
 

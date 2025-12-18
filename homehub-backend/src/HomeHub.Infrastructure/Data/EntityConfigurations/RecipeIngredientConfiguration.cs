@@ -27,6 +27,9 @@ public class RecipeIngredientConfiguration : IEntityTypeConfiguration<RecipeIngr
         // Ensure unique inventory item per recipe
         builder.HasIndex(ri => new { ri.RecipeId, ri.InventoryItemId })
             .IsUnique();
+
+        builder.Property(ri => ri.IsActive)
+            .IsRequired();
     }
 }
 
