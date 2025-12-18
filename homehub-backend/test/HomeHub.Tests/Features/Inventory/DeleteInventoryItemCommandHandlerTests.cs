@@ -36,7 +36,7 @@ public class DeleteInventoryItemCommandHandlerTests
             .ReturnsAsync(existingItem);
 
         _repositoryMock
-            .Setup(r => r.RemoveAsync(existingItem, It.IsAny<CancellationToken>()))
+            .Setup(r => r.DeleteWithRelatedEntitiesAsync(existingItem, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -45,7 +45,8 @@ public class DeleteInventoryItemCommandHandlerTests
         // Assert
         Assert.Equal(Unit.Value, result);
         _repositoryMock.Verify(r => r.GetByIdAsync(itemId, It.IsAny<CancellationToken>()), Times.Once);
-        _repositoryMock.Verify(r => r.RemoveAsync(existingItem, It.IsAny<CancellationToken>()), Times.Once);
+        _repositoryMock.Verify(r => r.DeleteWithRelatedEntitiesAsync(existingItem, It.IsAny<CancellationToken>()), Times.Once);
+        _repositoryMock.Verify(r => r.RemoveAsync(It.IsAny<InventoryItem>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -64,6 +65,7 @@ public class DeleteInventoryItemCommandHandlerTests
             () => _handler.Handle(command, CancellationToken.None));
 
         Assert.Contains(itemId.ToString(), exception.Message);
+        _repositoryMock.Verify(r => r.DeleteWithRelatedEntitiesAsync(It.IsAny<InventoryItem>(), It.IsAny<CancellationToken>()), Times.Never);
         _repositoryMock.Verify(r => r.RemoveAsync(It.IsAny<InventoryItem>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -86,7 +88,7 @@ public class DeleteInventoryItemCommandHandlerTests
             .ReturnsAsync(existingItem);
 
         _repositoryMock
-            .Setup(r => r.RemoveAsync(existingItem, cancellationToken))
+            .Setup(r => r.DeleteWithRelatedEntitiesAsync(existingItem, cancellationToken))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -94,6 +96,7 @@ public class DeleteInventoryItemCommandHandlerTests
 
         // Assert
         _repositoryMock.Verify(r => r.GetByIdAsync(itemId, cancellationToken), Times.Once);
-        _repositoryMock.Verify(r => r.RemoveAsync(existingItem, cancellationToken), Times.Once);
+        _repositoryMock.Verify(r => r.DeleteWithRelatedEntitiesAsync(existingItem, cancellationToken), Times.Once);
+        _repositoryMock.Verify(r => r.RemoveAsync(It.IsAny<InventoryItem>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

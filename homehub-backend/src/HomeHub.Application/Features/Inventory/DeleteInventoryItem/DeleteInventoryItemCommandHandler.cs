@@ -15,7 +15,7 @@ public class DeleteInventoryItemCommandHandler(IInventoryItemRepository reposito
             throw new KeyNotFoundException($"Inventory item with ID {request.Id} was not found.");
         }
 
-        await repository.RemoveAsync(inventoryItem, cancellationToken);
+        await repository.DeleteWithRelatedEntitiesAsync(inventoryItem, cancellationToken);
 
         return Unit.Value;
     }
